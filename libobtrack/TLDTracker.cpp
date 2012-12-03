@@ -48,7 +48,7 @@ int TLDTracker::feed(const cv::Mat& img) {
 }
 
 void TLDTracker::stopTrackingSingleObject(int idx) {
-	assert(idx >= 0 && idx < tld.size());
+	//assert(idx >= 0 && idx < tld.size());
 
 	//TODO
 }
