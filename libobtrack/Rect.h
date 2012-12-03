@@ -4,6 +4,7 @@
 #include <cv.h>
 #include <cmath>
 #include "Shape.h"
+#include "RotatedRect.h"
 
 namespace obt {
 
@@ -16,7 +17,7 @@ public:
 	Rect_<T>();
     Rect_<T>(T x, T y, T width, T height);
 	Rect_<T>(const cv::Rect_<T>& other);
-    Rect_<T>(const Rect_& other);
+    Rect_<T>(const Rect_<T>& other);
     Rect_<T>(const CvRect& other);
 	Rect_<T>(const cv::Point_<T>& org, const cv::Size_<T>& sz);
 	Rect_<T>(const cv::Point_<T>& pt1, const cv::Point_<T>& pt2);
@@ -44,6 +45,7 @@ public:
 
 	virtual cv::Point2f centroid() const;
 	virtual cv::Rect boundingRect() const;
+	virtual cv::RotatedRect boundingRotatedRect() const;
 
 	virtual void getPixels(std::vector<cv::Point>& result) const;
 
@@ -81,12 +83,12 @@ Rect_<T>::Rect_(const CvRect& cvRect):
 
 template<typename T>
 Rect_<T>::Rect_(const cv::Point_<T>& org, const cv::Size_<T>& sz):
-		cv::Rect<T>(org, sz) {
+		cv::Rect_<T>(org, sz) {
 }
 
 template<typename T> 
 Rect_<T>::Rect_(const cv::Point_<T>& pt1, const cv::Point_<T>& pt2):
-		cv::Rect<T>(pt1, pt2) {
+		cv::Rect_<T>(pt1, pt2) {
 }
 
 template<typename T> 
@@ -171,6 +173,11 @@ cv::Rect Rect_<T>::boundingRect() const {
 	int newHeight = static_cast<int>(height + y - newY + 0.5);
 
 	return cv::Rect(newX, newY, newWidth, newHeight);	
+}
+
+template<typename T>
+cv::RotatedRect Rect_<T>::boundingRotatedRect() const {
+	return RotatedRect(*this);
 }
 
 /*! Gets the pixels that are completely inside the rectangle.

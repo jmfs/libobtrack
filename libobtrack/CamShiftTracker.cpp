@@ -54,7 +54,7 @@ bool CamShiftTracker::train(const std::vector<TrainingInfo>& ti) {
 	Rect searchWindow = ti[0].shapes[0]->boundingRect();
 	cv::Mat maskROI = mask(searchWindow);
 	cv::Mat hsv;
-	cv::cvtColor(ti[0].img, hsv, CV_BGR2HSV);
+	cv::cvtColor(ti[0].img, hsv, CV_RGB2HSV);
 	cv::Mat roi = hsv(searchWindow);
 
 	// Threshold both saturation and value. See constructor docs for details.
@@ -94,7 +94,7 @@ int CamShiftTracker::feed(const cv::Mat& img) {
 	}
 
 	cv::Mat hsv;
-	cv::cvtColor(img, hsv, CV_BGR2HSV);
+	cv::cvtColor(img, hsv, CV_RGB2HSV);
 	cv::inRange(hsv, cv::Scalar(0, _sMin, _vMin, 0), cv::Scalar(181, 256, _vMax, 0), mask);
 
 	int channel = 0;

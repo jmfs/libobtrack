@@ -33,6 +33,8 @@ public:
 
 	cv::Point2f centroid() const;
 	cv::Rect boundingRect() const;
+	cv::RotatedRect boundingRotatedRect() const;
+
 
 	/*! Adds to result the pixels being inside the RotatedRect.
 		\param result Output vector for the pixels

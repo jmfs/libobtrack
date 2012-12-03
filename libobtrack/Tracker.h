@@ -13,6 +13,13 @@ class Tracker : public TrackerBase {
 public:
 	explicit Tracker(bool needsTraining = false);
 
+	/*  ! Redoes the training for the object in index n.
+
+		\return Whether the training has been successful. 
+			If the method hasn't been overriden, always returns true.
+	*/
+	//virtual bool retrain(int n, const std::vector<TrainingInfo>& ti);
+
 	/*! Trains an object tracker, according to sample images, or
 		known image/objects pairs. If a tracker needs training, it should
 		always overload this function.

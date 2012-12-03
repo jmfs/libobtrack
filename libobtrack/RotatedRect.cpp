@@ -1,4 +1,5 @@
 #include "RotatedRect.h"
+#include <iostream>
 
 namespace obt {
 
@@ -40,10 +41,15 @@ cv::Rect RotatedRect::boundingRect() const {
 	return cv::RotatedRect::boundingRect();
 }
 
+cv::RotatedRect RotatedRect::boundingRotatedRect() const {
+	return *this;
+}
+
 void RotatedRect::getPixels(std::vector<cv::Point>& result) const {
 	//TODO: complete
+	std::cerr << "obt::RotatedRect::getPixels: Not implemented" << std::endl;
 	assert(false);
-	cv::Rect bb = boundingRect();
+	/*cv::Rect bb = boundingRect();
 	
 	cv::Point2f corners[4];
 	points(corners);
@@ -67,7 +73,7 @@ void RotatedRect::getPixels(std::vector<cv::Point>& result) const {
 	for(int y = bb.y; y < bb.y + bb.height; y++) {
 
 
-	}
+	}*/
 }
 
 }
