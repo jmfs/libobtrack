@@ -68,11 +68,15 @@ void Tracker::stopTrackingSingleObject(size_t idx) {
 	if(!needsTraining() && !needsHint())
 		std::cerr << "Tracker::stopTrackingSingleObject: Can't stop tracking single object in\n "
 				"\t\tautomatic trackers (i.e. when needsHint() == false)" << std::endl;
+	else
+		std::cerr << "Tracker::stopTrackingSingleObject: "
+				"You really should be overriding this" << std::endl;
 }
 
 /*! Stops all tracking. Forgets any prior training.
 */
 void Tracker::stopTracking() {
+
 	trained = false;
 	started = false;
 }
