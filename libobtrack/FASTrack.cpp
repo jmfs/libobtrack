@@ -70,7 +70,7 @@ int FASTrack::start(const TrainingInfo* ti, int idx) {
 	cv::rectangle(mask, prevMaskRect, cv::Scalar::all(1));
 	
 	for(int i = 0; i < 2; i++) {
-		updateListElement(keyPoints[i], idx, std::vector<cv::KeyPoint>(DEFAULT_NUM_KEYPOINTS / 2));	
+		updateListElement(keyPoints[i], idx, std::vector<cv::KeyPoint>());
 		updateListElement(descriptors[i], idx, cv::Mat());
 	}
 
@@ -86,7 +86,7 @@ int FASTrack::start(const TrainingInfo* ti, int idx) {
 	else
 		updateListElement(keyPointShapes, idx, prevMaskRect);
 
-	updateListElement(latestMatches, idx, std::vector<cv::DMatch>(DEFAULT_NUM_KEYPOINTS / 4));
+	updateListElement(latestMatches, idx, std::vector<cv::DMatch>());
 
 	started = true;
 	return masks.size();
@@ -110,7 +110,7 @@ cv::Rect FASTrack::getNewMaskRect(const std::vector<cv::KeyPoint>& keyPoints, co
 		minX = static_cast<float>(prevMaskRect.x);
 		minY = static_cast<float>(prevMaskRect.y);
 		maxX = static_cast<float>(prevMaskRect.x + prevMaskRect.width);
-		maxY = static_cast<float>(prevMaskRect.y + prevMaskRect.height);		
+		maxY = static_cast<float>(prevMaskRect.y + prevMaskRect.height);
 	}
 	else {	
 		for(std::vector<cv::KeyPoint>::size_type i = 0; i < keyPoints.size(); i++) {
@@ -250,7 +250,7 @@ int FASTrack::feed(const cv::Mat& img) {
 				keyPointShapes.push_back(getNewMaskRect(kps, prevMaskRect));
 				continue;
 			}
-			// Calculate the movement average and standard deviation
+			// Calculate the movement average and standard deviation...
 			cv::Point2d avgMovement, movementStdDev;
 			movementStats(kps, prevKps, latestMatch, avgMovement, movementStdDev);
 	
@@ -259,7 +259,7 @@ int FASTrack::feed(const cv::Mat& img) {
 			cv::Mat newDescriptors(descs.rows, descs.cols, descs.type());
 			int numPoints = 0;
 			int prevNumPoints = latestMatch.size();
-			// So it is possible to eliminate outliers from the key points
+			// ...so it is possible to eliminate outliers from the key points
 			for(std::vector<cv::DMatch>::size_type i = 0; i < latestMatch.size(); i++) {
 				cv::Point2f trainPt = prevKps[latestMatch[i].trainIdx].pt;
 				cv::Point2f queryPt = kps[latestMatch[i].queryIdx].pt;
@@ -287,7 +287,7 @@ int FASTrack::feed(const cv::Mat& img) {
 
 	
 		keyPointShapes.push_back(getNewMaskRect(kps, prevMaskRect));
-	} // while(masksIt != masks.end())
+	} // for( ; masksIt != masks.end(); (...)
 
 	return masks.size();
 }
@@ -296,9 +296,13 @@ int FASTrack::feed(const cv::Mat& img) {
 	Additional info: The returned shapes are \ref Rect "Rects". 
 */
 void FASTrack::objectShapes(std::vector<const Shape*>& shapes) const {
+	const int oldSize = shapes.size();
+	shapes.resize(shapes.size() + keyPointShapes.size());
 	std::list<Rect>::const_iterator it;
-	for(it = keyPointShapes.begin(); it != keyPointShapes.end(); it++)
-		shapes.push_back(&(*it));
+	int i;
+	for(i = 0, it = keyPointShapes.begin(); 
+			it != keyPointShapes.end(); i++, it++)
+		shapes[oldSize + i] = &(*it);
 }
 
 /*! Converts matching indices to xy points
@@ -308,7 +312,7 @@ void FASTrack::matches2points(const vector<cv::KeyPoint>& train, const vector<cv
                     std::vector<cv::Point2f>& pts_query) {
 	pts_train.clear();
 	pts_query.clear();
-	pts_train.reserve(matches.size());
+	pts_train.reserve(matches.size()); // matches.size() is an upper bound for the vector's size
 	pts_query.reserve(matches.size());
 
 	for (size_t i = 0; i < matches.size(); i++)	{

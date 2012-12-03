@@ -12,6 +12,8 @@ public:
 	virtual cv::Rect boundingRect() const = 0;
 	virtual cv::RotatedRect boundingRotatedRect() const = 0;
 
+	virtual bool isInvalid() const;
+
 	virtual bool isComposite() const;
 	virtual bool isAlternative() const ;
 	virtual bool isSkeleton() const;

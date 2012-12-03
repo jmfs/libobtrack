@@ -4,6 +4,7 @@
 #include <cv.h>
 #include <cmath>
 #include "Shape.h"
+#include "helpers.h"
 #include "RotatedRect.h"
 
 namespace obt {
@@ -42,6 +43,7 @@ public:
     // y <= pt.y && pt.y < y + height ? true : false
 	bool contains(const cv::Point_<T>& pt) const;
 
+	virtual bool isInvalid() const;
 
 	virtual cv::Point3f centroid() const;
 	virtual cv::Rect boundingRect() const;
@@ -159,6 +161,14 @@ cv::Point3f Rect_<T>::centroid() const {
 		static_cast<float>(x + width / 2.0f), 
 		static_cast<float>(y + height / 2.0f),
 		0.0f);
+}
+
+template<typename T>
+bool Rect_<T>::isInvalid() const {
+	return x == static_cast<T>(INVALID_RECT.x) &&
+			y == static_cast<T>(INVALID_RECT.y) &&
+			width == static_cast<T>(INVALID_RECT.width) &&
+			height == static_cast<T>(INVALID_RECT.height);
 }
 
 template<typename T> 

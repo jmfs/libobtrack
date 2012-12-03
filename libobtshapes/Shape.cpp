@@ -2,6 +2,10 @@
 
 namespace obt {
 
+bool Shape::isInvalid() const {
+	return false;
+}
+
 bool Shape::isComposite() const {
 	return false;
 }

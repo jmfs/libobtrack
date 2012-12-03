@@ -7,8 +7,8 @@ CompositeShape::CompositeShape() {
 
 /*! Initializes \ref CompositeShape::members with vector(capacity).
 */
-CompositeShape::CompositeShape(int capacity):
-		members(capacity) {
+CompositeShape::CompositeShape(int capacity) {
+	members.reserve(capacity);
 }
 
 /*! Shorthand for adding two shapes to \ref CompositeShape::members.

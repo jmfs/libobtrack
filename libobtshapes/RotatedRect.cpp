@@ -1,4 +1,5 @@
 #include "RotatedRect.h"
+#include "helpers.h"
 #include <iostream>
 
 namespace obt {
@@ -31,6 +32,12 @@ void RotatedRect::points(cv::Point2f pts[]) const {
 	cv::RotatedRect::points(pts);
 }
 
+bool RotatedRect::isInvalid() const {
+	return center == INVALID_ROTATED_RECT.center &&
+			size == INVALID_ROTATED_RECT.size &&
+			angle == INVALID_ROTATED_RECT.angle;
+}
+
 cv::Point3f RotatedRect::centroid() const {
 	return cv::Point3f(center); 
 }
@@ -44,10 +51,13 @@ cv::RotatedRect RotatedRect::boundingRotatedRect() const {
 }
 
 void RotatedRect::getPixels(std::vector<cv::Point>& result) const {
-	//TODO: stub
 	std::cerr << "obt::RotatedRect::getPixels: Not implemented, yet" << std::endl;
 	assert(false);
-	/*cv::Rect bb = boundingRect();
+
+	//TODO: Unfinished
+	
+	result.reserve(result.size() + size.width * size.height);
+	cv::Rect bb = boundingRect();
 	
 	cv::Point2f corners[4];
 	points(corners);
@@ -67,11 +77,10 @@ void RotatedRect::getPixels(std::vector<cv::Point>& result) const {
 		// for x = 0
 	}
 
-
 	for(int y = bb.y; y < bb.y + bb.height; y++) {
+		// TODO: finish up
 
-
-	}*/
+	}
 }
 
 }

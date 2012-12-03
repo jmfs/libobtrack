@@ -32,6 +32,8 @@ public:
 	*/
 	void points(cv::Point2f pts[]) const;
 
+	bool isInvalid() const;
+
 	cv::Point3f centroid() const;
 	cv::Rect boundingRect() const;
 	cv::RotatedRect boundingRotatedRect() const;

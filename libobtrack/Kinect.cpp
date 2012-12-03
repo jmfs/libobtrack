@@ -66,10 +66,9 @@ KinectTracker::KinectTracker(xn::Context& context):
 		skel(true),
 		skel2D(false),
 		userSkelAlternative(2),
-		user2DSkelAlternative(2),
-		users(4) // Paraphrasing infamous words, this should be enough for everyone.
+		user2DSkelAlternative(2) {
+	users.reserve(4); // Paraphrasing infamous words, this should be enough for everyone.
 				// There isn't a problem if it's exceeded anyway.
-{
 }
 
 /*! Initializes OpenNI.
@@ -105,11 +104,9 @@ int KinectTracker::init() {
 		after the user leaves the frame.
 		
 		When the user leaves the frame, her center of mass is reset to (0, 0, 0).
-		It would also be useful to know if that coordinate system is 
-		related to the video's pixel coordinates, though I suspect it isn't.
 
-		Although skeleton data appears to be lost when the user leaves the frame
-		in NITE's "Players" example, this is not the case.
+		In NITE's "Players" example, although skeleton data appears to be lost 
+		when the user leaves the frame, this is not the case.
 
 		The matrix for joint orientation is a 9-element array. Is the array row-major,
 		or column-major? This post (http://groups.google.com/group/openni-dev/browse_thread/thread/18ee244d608fa642)
@@ -174,7 +171,7 @@ void KinectTracker::updateSkeleton() {
 		const Skeleton::Joint curJoint = static_cast<Skeleton::Joint>(openNIJoints[i] - 1);
 		joints.insert(std::make_pair(curJoint, 
 			JointInfo(position, posConfidence, rotation, rotConfidence)));
-		// TODO: Convert the rotations to 2D and pass them on
+		// TODO: Find a way to convert the rotations to 2D and pass them on
 		joints2D.insert(std::make_pair(curJoint,
 			JointInfo(pos2D, posConfidence, cv::Mat(), 0.0f)));
 	}
@@ -194,7 +191,6 @@ int KinectTracker::feed(const cv::Mat& img) {
 	}
 
 	std::vector<XnUserID> userIDs(numUsers);
-	userIDs.resize(numUsers);
 	userNode.GetUsers(userIDs.data(), numUsers);
 
 	XnUserID maxUserID = *std::max_element(userIDs.begin(), userIDs.end());

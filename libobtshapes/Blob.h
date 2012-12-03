@@ -16,6 +16,8 @@ class Blob : public Shape {
 public:
 	explicit Blob(int capacity = 100);
 
+	virtual bool isInvalid() const;
+
 	cv::Point3f centroid() const;
 	cv::Rect boundingRect() const;
 	cv::RotatedRect boundingRotatedRect() const;

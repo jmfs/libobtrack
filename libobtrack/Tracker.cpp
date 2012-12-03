@@ -70,6 +70,10 @@ bool Tracker::needsTraining() const {
 	return _needsTraining;
 }
 
+bool Tracker::needsHint() const {
+	return _needsHint;
+}
+
 bool Tracker::isTrained() const {
 	return trained;
 }

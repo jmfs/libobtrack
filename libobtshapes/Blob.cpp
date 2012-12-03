@@ -9,10 +9,14 @@ namespace obt {
 
 const int Blob::DEFAULT_CAPACITY = 100;
 
-Blob::Blob(int capacity):
-		pixels(capacity) {
+Blob::Blob(int capacity) {
 	minX = minY = std::numeric_limits<int>::max();
 	maxX = maxY = std::numeric_limits<int>::min();
+	pixels.reserve(capacity);
+}
+
+bool Blob::isInvalid() const {
+	return pixels.empty();
 }
 
 cv::Point3f Blob::centroid() const {
