@@ -340,6 +340,24 @@
     <ClInclude Include="Tracker.h" />
     <ClInclude Include="TrainingInfo.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libobtshapes\libobtshapes.vcxproj">
+      <Project>{6a758eb0-f6b3-4f29-a7d8-54de10cd121f}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenTLD\OpenTLD.vcxproj">
+      <Project>{eb663522-a13c-4ec7-899f-8c1c6359c392}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
