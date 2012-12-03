@@ -36,24 +36,29 @@ public:
 	virtual int init();
 
 	/*! Performs an initial object detection, with or without hints,
-	 *  or updates one or more object's current shape and/or appearance models.
-	 *	If needsHint is true, ti should contain data, otherwise, NO_HINT is returned.
-	 *  If needsHint is false, what to do with any data in ti is up to each individual 
-	 *  tracker's implementation.
-	 *
-	 * \param ti Hints about the objects in the image.
-	 *		If ti is NULL, or if it doesn't contain data, and needsHint == true, 
-	 *		NO_HINT is returned.
-	 * \param idx If non-negative, indicates the first object index to update. If negative,
-	 *		new objects are tracked.
-	 * \return The number of detected objects in the image, or a negative error code.
+		or updates one or more object's current shape and/or appearance models.
+
+		If needsHint is true, ti should contain data, otherwise, NO_HINT is returned.
+		If needsHint is false, what to do with any data in ti is up to each individual 
+		tracker's implementation.
+	
+		\param ti Hints about the objects in the image.
+			If ti is NULL, or if it doesn't contain data, and needsHint == true, 
+			NO_HINT is returned.
+		\param idx If non-negative, indicates the first object index to update. If negative,
+			new objects are tracked.
+
+		\return The number of detected objects in the image, or a negative error code.
 	 */
 	virtual int start(const TrainingInfo* ti = NULL, int idx = -1) = 0;
 
 	/*! Feeds a new image to the object tracker. If no initial object detection has been
-	 * done yet, start(img, NULL) is called.
-	 * \param img A new image.
-	 * \return The number of detected objects in the image.
+		done yet, start() is called.
+
+		\param img A new image.
+		\return The number of detected objects in the image.
+
+		\sa start
 	 */
 	virtual int feed(const cv::Mat& img) = 0;
 

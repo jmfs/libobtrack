@@ -1,4 +1,5 @@
 #include "Tracker.h"
+#include <iostream>
 
 namespace obt {
 
@@ -49,14 +50,24 @@ bool Tracker::train(const TrainingInfo& ti) {
 }
 
 /*! Stops tracking a single object, deleting its training data.
+
+	This only applies if the tracker needs training or a hint.
+
+	After calling this function, the shapes vector obtained by the next call
+	to \ref objectShapes() or \ref objectShapes2D() shall have one less
+	element than before.
 		
 	\param idx The index of the object to stop tracking, as reported by objectShapes()
 
 	\return Whether there was success.
 
 	\sa objectShapes()
+	\sa needsHint()
 */
 void Tracker::stopTrackingSingleObject(size_t idx) {
+	if(!needsTraining() && !needsHint())
+		std::cerr << "Tracker::stopTrackingSingleObject: Can't stop tracking single object in\n "
+				"\t\tautomatic trackers (i.e. when needsHint() == false)" << std::endl;
 }
 
 /*! Stops all tracking. Forgets any prior training.
