@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\cvblobs\blob.cpp">
+      <Filter>cvblobs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cvblobs\BlobContour.cpp">
+      <Filter>cvblobs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cvblobs\BlobOperators.cpp">
+      <Filter>cvblobs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cvblobs\BlobProperties.cpp">
+      <Filter>cvblobs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cvblobs\BlobResult.cpp">
+      <Filter>cvblobs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cvblobs\ComponentLabeling.cpp">
+      <Filter>cvblobs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mftracker\bb.cpp">
+      <Filter>mftracker/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mftracker\bb_predict.cpp">
+      <Filter>mftracker/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mftracker\fbtrack.cpp">
+      <Filter>mftracker/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mftracker\lk.cpp">
+      <Filter>mftracker/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mftracker\median.cpp">
+      <Filter>mftracker/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\Clustering.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\DetectionResult.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\DetectorCascade.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\EnsembleClassifier.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\ForegroundDetector.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\MedianFlowTracker.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\NNClassifier.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\TLD.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\TLDUtil.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tld\VarianceFilter.cpp">
+      <Filter>tld/Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\cvblobs\blob.h">
+      <Filter>cvblobs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cvblobs\BlobContour.h">
+      <Filter>cvblobs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cvblobs\BlobLibraryConfiguration.h">
+      <Filter>cvblobs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cvblobs\BlobOperators.h">
+      <Filter>cvblobs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cvblobs\BlobProperties.h">
+      <Filter>cvblobs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cvblobs\BlobResult.h">
+      <Filter>cvblobs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cvblobs\ComponentLabeling.h">
+      <Filter>cvblobs</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mftracker\bb.h">
+      <Filter>mftracker/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mftracker\bb_predict.h">
+      <Filter>mftracker/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mftracker\fbtrack.h">
+      <Filter>mftracker/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mftracker\lk.h">
+      <Filter>mftracker/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mftracker\median.h">
+      <Filter>mftracker/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\Clustering.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\DetectionResult.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\DetectorCascade.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\EnsembleClassifier.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\ForegroundDetector.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\IntegralImage.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\MedianFlowTracker.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\NNClassifier.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\NormalizedPatch.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\TLD.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\TLDUtil.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tld\VarianceFilter.h">
+      <Filter>tld/Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="cvblobs">
+      <UniqueIdentifier>{CF5FBDEB-B417-4820-BD37-4D75406D131D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mftracker/Source">
+      <UniqueIdentifier>{4F5E5C29-B554-4DF4-A738-047D0CA8026A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tld/Source">
+      <UniqueIdentifier>{9281156A-B44C-4460-8235-CBCAFB359A59}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+</Project>

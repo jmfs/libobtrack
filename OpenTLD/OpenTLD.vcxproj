@@ -1,0 +1,274 @@
+﻿<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{EB663522-A13C-4EC7-899F-8C1C6359C392}</ProjectGUID>
+    <SccProjectName />
+    <SccLocalPath />
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>OpenTLD</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Dev\OpenTLD C++\Debug\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">OpenTLD.dir\Debug\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">OpenTLD</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.lib</TargetExt>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Dev\OpenTLD C++\Release\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">OpenTLD.dir\Release\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">OpenTLD</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.lib</TargetExt>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\Dev\OpenTLD C++\MinSizeRel\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">OpenTLD.dir\MinSizeRel\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">OpenTLD</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.lib</TargetExt>
+      <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\Dev\OpenTLD C++\RelWithDebInfo\</OutDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">OpenTLD.dir\RelWithDebInfo\</IntDir>
+      <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">OpenTLD</TargetName>
+      <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.lib</TargetExt>
+    </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 -fopenmp -fPIC %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;LIBCONFIGXX_STATIC;LIBCONFIG_STATIC;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>Debug</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:/Users/Dev/OpenTLD C++/Debug/OpenTLD.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;LIBCONFIGXX_STATIC;LIBCONFIG_STATIC;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 -fopenmp -fPIC %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat></DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;LIBCONFIGXX_STATIC;LIBCONFIG_STATIC;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>Release</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:/Users/Dev/OpenTLD C++/Release/OpenTLD.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;LIBCONFIGXX_STATIC;LIBCONFIG_STATIC;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 -fopenmp -fPIC %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat></DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;LIBCONFIGXX_STATIC;LIBCONFIG_STATIC;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>MinSizeRel</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:/Users/Dev/OpenTLD C++/MinSizeRel/OpenTLD.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;LIBCONFIGXX_STATIC;LIBCONFIG_STATIC;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalOptions> /Zm1000 -fopenmp -fPIC %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;LIBCONFIGXX_STATIC;LIBCONFIG_STATIC;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AssemblerListingLocation>RelWithDebInfo</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ProgramDataBaseFileName>C:/Users/Dev/OpenTLD C++/RelWithDebInfo/OpenTLD.pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;LIBCONFIGXX_STATIC;LIBCONFIG_STATIC;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/OpenCV2.2/include;C:/OpenCV2.2/include/opencv;C:/OpenCV2.2/3rdparty/include;C:/OpenCV2.2/modules/core/include;C:/OpenCV2.2/modules/imgproc/include;C:/OpenCV2.2/modules/features2d/include;C:/OpenCV2.2/modules/gpu/include;C:/OpenCV2.2/modules/calib3d/include;C:/OpenCV2.2/modules/objdetect/include;C:/OpenCV2.2/modules/video/include;C:/OpenCV2.2/modules/highgui/include;C:/OpenCV2.2/modules/ml/include;C:/OpenCV2.2/modules/legacy/include;C:/OpenCV2.2/modules/contrib/include;C:/OpenCV2.2/modules/flann/include;C:/Users/Dev/OpenTLD C++/src/cvblobs;C:/Users/Dev/OpenTLD C++/src/tld;C:/Users/Dev/OpenTLD C++/src/mftracker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/Users/Dev/OpenTLD C++/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"C:\Program Files (x86)\CMake 2.8\bin\cmake.exe" "-HC:/Users/Dev/OpenTLD C++" "-BC:/Users/Dev/OpenTLD C++" --check-stamp-file "C:\Users\Dev\OpenTLD C++\CMakeFiles\generate.stamp"
+if errorlevel 1 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:/Users/Dev/OpenTLD C++/CMakeLists.txt;C:\Users\Dev\OpenTLD C++\CMakeLists.txt;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeSystem.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCCompiler.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXCompiler.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCPlatform.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXPlatform.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeRCCompiler.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCPlatform.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXPlatform.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake;C:\OpenCV2.2\OpenCVConfig.cmake;C:\Users\Dev\OpenTLD C++\OpenTLDConfig.cmake.in;C:\Users\Dev\OpenTLD C++\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Dev\OpenTLD C++\CMakeFiles\generate.stamp;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/Users/Dev/OpenTLD C++/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"C:\Program Files (x86)\CMake 2.8\bin\cmake.exe" "-HC:/Users/Dev/OpenTLD C++" "-BC:/Users/Dev/OpenTLD C++" --check-stamp-file "C:\Users\Dev\OpenTLD C++\CMakeFiles\generate.stamp"
+if errorlevel 1 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/Users/Dev/OpenTLD C++/CMakeLists.txt;C:\Users\Dev\OpenTLD C++\CMakeLists.txt;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeSystem.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCCompiler.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXCompiler.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCPlatform.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXPlatform.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeRCCompiler.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCPlatform.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXPlatform.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake;C:\OpenCV2.2\OpenCVConfig.cmake;C:\Users\Dev\OpenTLD C++\OpenTLDConfig.cmake.in;C:\Users\Dev\OpenTLD C++\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Dev\OpenTLD C++\CMakeFiles\generate.stamp;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule C:/Users/Dev/OpenTLD C++/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">"C:\Program Files (x86)\CMake 2.8\bin\cmake.exe" "-HC:/Users/Dev/OpenTLD C++" "-BC:/Users/Dev/OpenTLD C++" --check-stamp-file "C:\Users\Dev\OpenTLD C++\CMakeFiles\generate.stamp"
+if errorlevel 1 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:/Users/Dev/OpenTLD C++/CMakeLists.txt;C:\Users\Dev\OpenTLD C++\CMakeLists.txt;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeSystem.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCCompiler.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXCompiler.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCPlatform.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXPlatform.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeRCCompiler.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCPlatform.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXPlatform.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake;C:\OpenCV2.2\OpenCVConfig.cmake;C:\Users\Dev\OpenTLD C++\OpenTLDConfig.cmake.in;C:\Users\Dev\OpenTLD C++\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\Dev\OpenTLD C++\CMakeFiles\generate.stamp;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule C:/Users/Dev/OpenTLD C++/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">"C:\Program Files (x86)\CMake 2.8\bin\cmake.exe" "-HC:/Users/Dev/OpenTLD C++" "-BC:/Users/Dev/OpenTLD C++" --check-stamp-file "C:\Users\Dev\OpenTLD C++\CMakeFiles\generate.stamp"
+if errorlevel 1 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:/Users/Dev/OpenTLD C++/CMakeLists.txt;C:\Users\Dev\OpenTLD C++\CMakeLists.txt;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeSystem.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCCompiler.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXCompiler.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeGenericSystem.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\WindowsPaths.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCPlatform.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXPlatform.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeRCCompiler.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeRCInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCXXInformation.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\Windows-cl.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCPlatform.cmake;C:\Users\Dev\OpenTLD C++\CMakeFiles\CMakeCXXPlatform.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\Platform\cl.cmake;C:\Program Files (x86)\CMake 2.8\share\cmake-2.8\Modules\CMakeCommonLanguageInclude.cmake;C:\OpenCV2.2\OpenCVConfig.cmake;C:\Users\Dev\OpenTLD C++\OpenTLDConfig.cmake.in;C:\Users\Dev\OpenTLD C++\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\Dev\OpenTLD C++\CMakeFiles\generate.stamp;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\cvblobs\blob.cpp" />
+    <ClCompile Include="src\cvblobs\BlobContour.cpp" />
+    <ClCompile Include="src\cvblobs\BlobOperators.cpp" />
+    <ClCompile Include="src\cvblobs\BlobProperties.cpp" />
+    <ClCompile Include="src\cvblobs\BlobResult.cpp" />
+    <ClCompile Include="src\cvblobs\ComponentLabeling.cpp" />
+    <ClInclude Include="src\cvblobs\blob.h" />
+    <ClInclude Include="src\cvblobs\BlobContour.h" />
+    <ClInclude Include="src\cvblobs\BlobLibraryConfiguration.h" />
+    <ClInclude Include="src\cvblobs\BlobOperators.h" />
+    <ClInclude Include="src\cvblobs\BlobProperties.h" />
+    <ClInclude Include="src\cvblobs\BlobResult.h" />
+    <ClInclude Include="src\cvblobs\ComponentLabeling.h" />
+    <ClCompile Include="src\mftracker\bb.cpp" />
+    <ClCompile Include="src\mftracker\bb_predict.cpp" />
+    <ClCompile Include="src\mftracker\fbtrack.cpp" />
+    <ClCompile Include="src\mftracker\lk.cpp" />
+    <ClCompile Include="src\mftracker\median.cpp" />
+    <ClInclude Include="src\mftracker\bb.h" />
+    <ClInclude Include="src\mftracker\bb_predict.h" />
+    <ClInclude Include="src\mftracker\fbtrack.h" />
+    <ClInclude Include="src\mftracker\lk.h" />
+    <ClInclude Include="src\mftracker\median.h" />
+    <ClCompile Include="src\tld\Clustering.cpp" />
+    <ClCompile Include="src\tld\DetectionResult.cpp" />
+    <ClCompile Include="src\tld\DetectorCascade.cpp" />
+    <ClCompile Include="src\tld\EnsembleClassifier.cpp" />
+    <ClCompile Include="src\tld\ForegroundDetector.cpp" />
+    <ClCompile Include="src\tld\MedianFlowTracker.cpp" />
+    <ClCompile Include="src\tld\NNClassifier.cpp" />
+    <ClCompile Include="src\tld\TLD.cpp" />
+    <ClCompile Include="src\tld\TLDUtil.cpp" />
+    <ClCompile Include="src\tld\VarianceFilter.cpp" />
+    <ClInclude Include="src\tld\Clustering.h" />
+    <ClInclude Include="src\tld\DetectionResult.h" />
+    <ClInclude Include="src\tld\DetectorCascade.h" />
+    <ClInclude Include="src\tld\EnsembleClassifier.h" />
+    <ClInclude Include="src\tld\ForegroundDetector.h" />
+    <ClInclude Include="src\tld\IntegralImage.h" />
+    <ClInclude Include="src\tld\MedianFlowTracker.h" />
+    <ClInclude Include="src\tld\NNClassifier.h" />
+    <ClInclude Include="src\tld\NormalizedPatch.h" />
+    <ClInclude Include="src\tld\TLD.h" />
+    <ClInclude Include="src\tld\TLDUtil.h" />
+    <ClInclude Include="src\tld\VarianceFilter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:/Users/Dev/OpenTLD C++/ZERO_CHECK.vcxproj">
+      <Project>BCEDAB4F-4D0A-4855-B3E3-D5AF58CFB4A7</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
