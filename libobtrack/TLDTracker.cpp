@@ -74,20 +74,20 @@ int TLDTracker::feed(const cv::Mat& img) {
 	return tlds.size();
 }
 
-void TLDTracker::stopTrackingSingleObject(int idx) {
+void TLDTracker::stopTrackingSingleObject(size_t idx) {
 	assert(idx >= 0 && idx < tlds.size());
-
-	if(idx < tlds.size() - 1)
-		tlds[idx]->release();		
-	else
-		tlds.pop_back();
-		
+	if(tlds.size() == 1) {
+		stopTracking();
+		return;
+	}
+	tlds.erase(tlds.begin() + idx);
+	objects.erase(objects.begin() + idx);
 }
 
 void TLDTracker::stopTracking() {
-	for(int i = 0; i < tlds.size(); i++) {
-	}
 	tlds.clear();
+	objects.clear();
+	started = false;
 }
 
 void TLDTracker::objectShapes(std::vector<const Shape*>& shapes) const {

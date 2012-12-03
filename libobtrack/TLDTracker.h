@@ -27,7 +27,7 @@ public:
 	TLDTracker();
 	int start(const TrainingInfo* ti = NULL, int idx = -1);
 	int feed(const cv::Mat& img);
-	void stopTrackingSingleObject(int idx);
+	void stopTrackingSingleObject(size_t idx);
 	void stopTracking();
 	void objectShapes(std::vector<const Shape*>& shapes) const;
 
