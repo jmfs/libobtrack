@@ -1,6 +1,8 @@
 #include "CamShiftTracker.h"
 #include "RotatedRect.h"
+#include "Rect.h"
 #include <cv.h>
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -26,52 +28,54 @@ namespace obt {
 */
 CamShiftTracker::CamShiftTracker(int bins, int sMin, int vMin, int vMax):
 		Tracker(true),
-		bins(bins),
-		sMin(sMin),
-		vMin(std::min(vMin, vMax)),
-		vMax(std::max(vMin, vMax)) {
-	hist.create(1, &(this->bins), CV_8UC1);
+		_bins(bins),
+		_sMin(sMin),
+		_vMin(std::min(vMin, vMax)),
+		_vMax(std::max(vMin, vMax)) {
 }
 
 /*! Trains the CamShiftTracker with an image, and the region where the object is present.
-	\param ti A vector of image/object pairs. In this tracker, only the first element 
+	\param ti A vector of RGB image/object pairs. In this tracker, only the first element 
 	is considered.
 */
-bool CamShiftTracker::train(const std::vector<const TrainingInfo>& ti) {
-	std::vector<const TrainingInfo>::size_type size = ti.size();
-	if(size == 0 || ti[0].objects.empty()) {
+bool CamShiftTracker::train(const std::vector<TrainingInfo>& ti) {
+	std::vector<TrainingInfo>::size_type size = ti.size();
+	if(size == 0 || ti[0].shapes.empty()) {
 		std::clog << "ERROR: CamShiftTracker::train: Training vector is empty "
 				<< "or has no objects." << std::endl;
 		return false;
 	}
+
+	mask = cv::Mat::zeros(ti[0].img.rows, ti[0].img.cols, CV_8UC1);
 	
 	// CamShift prep
 
 	// Extract the object's region and convert to HSV
-	searchWindow = ti[0].objects[0].shape().boundingRect();
-	cv::Mat roi = ti[0].img(searchWindow);
+	Rect searchWindow = ti[0].shapes[0]->boundingRect();
+	cv::Mat maskROI = mask(searchWindow);
 	cv::Mat hsv;
-	cv::cvtColor(roi, hsv, CV_RGB2HSV);
+	cv::cvtColor(ti[0].img, hsv, CV_BGR2HSV);
+	cv::Mat roi = hsv(searchWindow);
 
 	// Threshold both saturation and value. See constructor docs for details.
-	cv::Mat mask;
+
 	// In 8-bit images, OpenCV has hues from 0 to 180.
 	// Upper bounds are exclusive.
-	cv::inRange(hsv, cv::Scalar(0, sMin, vMin, 0), cv::Scalar(181, 256, vMax, 0), mask);
+	cv::inRange(hsv, cv::Scalar(0, _sMin, _vMin, 0), cv::Scalar(181, 256, _vMax, 0), mask);
 
-	const int channel = 0;
+	const int channel[] = {0};
 	float range[] = {0, 181};
 	const float* ranges[] = {range};
-	cv::calcHist(&hsv, 1, &channel, mask, hist, 1, &bins, ranges, true, false);
+	cv::calcHist(&roi, 1, channel, maskROI, hist, 1, &_bins, ranges, true, false);
 
 	double histMax;
-	cv::minMaxLoc(hist, NULL, &histMax);	
-	// Couldn't find cv::convertScale. That's what should be here.
-	// Maybe the OpenCV devs forgot to include it in the C++ interface (as of 2010-10-03).
-	// Anyway, there are no negative values here, so this should work.
-	cv::convertScaleAbs(hist, hist, histMax ? 255.0 / histMax : 0.0);
+	cv::minMaxLoc(hist, NULL, &histMax);
+	hist *= histMax > 0 ? 255.0 / histMax : 0.0;
 
-	_objects.push_back(Object(new Rect(searchWindow)));
+	if(shapes.empty())
+		shapes.push_back(RotatedRect(searchWindow));
+	else
+		shapes[0] = RotatedRect(searchWindow);
 
 	trained = true;
 
@@ -85,21 +89,116 @@ int CamShiftTracker::start(const cv::Mat& img) {
 
 int CamShiftTracker::feed(const cv::Mat& img) {
 	if(!trained) {
-		std::clog << "ERROR: CamShiftTracker::train: Training vector is empty "	<< 
-				"or has no objects." << std::endl;
+		std::clog << "ERROR: CamShiftTracker::feed: tracker has not been trained." << std::endl;
 		return 0;
 	}
+
+	cv::Mat hsv;
+	cv::cvtColor(img, hsv, CV_BGR2HSV);
+	cv::inRange(hsv, cv::Scalar(0, _sMin, _vMin, 0), cv::Scalar(181, 256, _vMax, 0), mask);
+
 	int channel = 0;
 	float range[] = {0, 256};
 	const float* ranges[] = {range};
 	cv::Mat bp;
-	cv::calcBackProject(&img, 1, &channel, hist, bp, ranges, 1, true);
-	RotatedRect* foundObject = new RotatedRect();
-	*foundObject = cv::CamShift(bp, searchWindow, 
+	cv::calcBackProject(&hsv, 1, &channel, hist, bp, ranges);	
+	cv::bitwise_and(bp, mask, bp);
+	Rect searchWindow = shapes[0].boundingRect();
+	sanitizeWindow(searchWindow, hsv.cols, hsv.rows);
+	
+	RotatedRect foundObject = cv::CamShift(bp, searchWindow, 
 		cv::TermCriteria(cv::TermCriteria::COUNT | cv::TermCriteria::EPS, 10, 1));
-	_objects.front().setShape(foundObject);
 
-	searchWindow = foundObject->boundingRect();	
+	shapes[0] = foundObject;
+	
+	return 1;
 }
+
+int CamShiftTracker::bins() const {
+	return _bins;
+}
+
+/*/*! Sets the number of histogram bins.
+	Will only take effect once train() is called again.
+	\sa train()
+*
+void CamShiftTracker::setBins(int numBins) {
+	_bins = std::max(0, numBins);
+}*/
+
+int CamShiftTracker::sMin() const {
+	return _sMin;
+}
+
+/*! Sets the mimimum saturation. Will only take effect once train() is called.
+	\sa train()
+*/
+void CamShiftTracker::setSMin(int sMin) {
+	_sMin = sMin < 0 ? 0 : std::min(sMin, 255);
+}
+
+int CamShiftTracker::vMin() const {
+	return _vMin;
+}
+
+/*! Sets the minimum value. If the new minimum value is greater than or 
+	equal to the maximum value, the maximum value is reset to 256.
+	Will only take effect once train() is called.
+*/
+void CamShiftTracker::setVMin(int vMin) {
+	if(vMin < 0)
+		vMin = 0;
+	else if(vMin >= _vMax) // >= and 256, since vMax is exclusive
+		_vMax = 256;		
+	else
+		_vMin = std::min(vMin, 255);
+}
+
+
+int CamShiftTracker::vMax() const {
+	return _vMax;
+}
+
+/*! Sets the maximum value. If the new maximum value is less than the 
+	minimum value, the minimum value is reset to 0.
+	Will only take effect once train() is called.
+*/
+void CamShiftTracker::setVMax(int vMax) {
+	if(vMax > 256) 
+		_vMax = 256;
+	else if(vMax < _vMin)
+		_vMin = 0;
+	else
+		_vMax = std::max(0, _vMax);
+}
+
+void CamShiftTracker::objectShapes(std::vector<const Shape*>& out) const {	
+	for(std::vector<RotatedRect>::const_iterator i = shapes.begin(); i != shapes.end(); i++)
+		out.push_back(static_cast<const Shape*>(&(*i)));
+}
+
+void CamShiftTracker::sanitizeWindow(Rect& rect, int width, int height) {
+	if(rect.x < 0) {
+		// x is negative, so in reality we are subtracting from the width
+		rect.width += rect.x;
+		rect.x = 0;
+	}
+	else if(rect.x >= width)
+		rect.x = width - 1;
+
+	if(rect.y < 0) {
+		// y is negative, so in reality we are subtracting from the height
+		rect.height += rect.y;
+		rect.y = 0;
+	}
+	else if(rect.y >= height)
+		rect.y = height - 1;
+
+	if(rect.x + rect.width > width)
+		rect.width = width - rect.x;
+	if(rect.y + rect.height > height)
+		rect.height = height - rect.y;
+}
+	
 
 }

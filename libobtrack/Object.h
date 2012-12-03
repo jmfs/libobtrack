@@ -18,6 +18,7 @@ public:
 		for freeing the data in shape.
 	*/
 	Object(Shape* shape);
+	Object(const Object& other);
 	
 	virtual cv::Point centroid() const;
 	virtual cv::Rect boundingRect() const;

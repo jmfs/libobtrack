@@ -6,6 +6,8 @@
 
 namespace obt {
 
+template<typename T> class Rect_;
+
 /*! A rotated rectangle class. Like cv::RotatedRect, but with Shape's operations.
 	See http://opencv.willowgarage.com/documentation/cpp/basic_structures.html#rotatedrect
 	for more details.
@@ -17,6 +19,9 @@ public:
     RotatedRect(const CvBox2D& box);
 	RotatedRect(const cv::RotatedRect cvRotRect);
 
+	//! Convert a Rect_ into a RotatedRect
+	template<typename T> RotatedRect(const Rect_<T>& rect);
+
 	operator cv::RotatedRect() const;
     operator CvBox2D() const;
 
@@ -26,14 +31,29 @@ public:
 	*/
 	void points(cv::Point2f pts[]) const;
 
-	virtual cv::Point2f centroid() const;
-	virtual cv::Rect boundingRect() const;
+	cv::Point2f centroid() const;
+	cv::Rect boundingRect() const;
 
 	/*! Adds to result the pixels being inside the RotatedRect.
 		\param result Output vector for the pixels
 	*/
-	virtual void getPixels(std::vector<cv::Point>& result) const;
+	void getPixels(std::vector<cv::Point>& result) const;
 };
+
+template<typename T> 
+RotatedRect::RotatedRect(const Rect_<T>& rect):
+		cv::RotatedRect(
+			cv::Point2f(
+				static_cast<float>(rect.x + rect.width / 2.0f), 
+				static_cast<float>(rect.y + rect.height / 2.0f)
+			),
+			cv::Size2f(
+				static_cast<float>(rect.width), 
+				static_cast<float>(rect.height)
+			),
+			0.0f
+		) {
+}
 
 }
 

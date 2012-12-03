@@ -9,7 +9,7 @@ namespace obt {
 class TrainingInfo {
 public:	
 	cv::Mat img; //! An image
-	std::vector<Object> objects; //! Info about the objects found in an image
+	std::vector<Shape*> shapes; //! Info about the objects found in an image
 };
 
 }

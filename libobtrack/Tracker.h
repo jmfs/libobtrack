@@ -22,10 +22,10 @@ public:
 	*/
 	virtual bool train(const std::vector<TrainingInfo>& ti);
 
-	const std::list<Object>& objects() const;
-
-protected:
-	std::list<Object> _objects; //! A list of currently tracked objects
+	/*! Appends the shapes found to a vector.
+		\param shapes Output. The found shapes will be appended to this vector.
+	*/
+	virtual void objectShapes(std::vector<const Shape*>& shapes) const = 0;
 };
 
 }

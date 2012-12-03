@@ -11,8 +11,4 @@ bool Tracker::train(const std::vector<TrainingInfo>& ti) {
 	return true;
 }
 
-const std::list<Object>& Tracker::objects() const {
-	return _objects;
-}
-
 }

@@ -62,7 +62,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="cv210.lib cxcore210.lib highgui210.lib"
 				OutputFile="$(OutDir)\$(ProjectName)d.lib"
 			/>
 			<Tool
@@ -306,10 +305,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Rect.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\RotatedRect.cpp"
 				>
 			</File>
@@ -337,6 +332,10 @@
 			</File>
 			<File
 				RelativePath=".\Object.h"
+				>
+			</File>
+			<File
+				RelativePath=".\obtrack.h"
 				>
 			</File>
 			<File
