@@ -7,7 +7,7 @@
 namespace obt {
 
 /*! Base class for representing abstract shapes.
-	Each shape should derive from this.
+	Each shape must derive from this.
 */
 class Shape {
 public:

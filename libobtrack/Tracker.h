@@ -2,7 +2,7 @@
 #define _OBTRACK_TRACKER_H
 
 #include "TrainingInfo.h"
-#include  "Skeleton.h"
+#include "Skeleton.h"
 #include <list>
 #include <vector>
 #include <limits>
@@ -19,17 +19,13 @@ public:
 	//! Error codes for the start and feed methods.
 	enum Errors {
 		//! Returned for a tracker which needs a hint, but doesn't receive one
-		NO_HINT = -1, 
+		NO_HINT = INT_MIN, 
 		//! Returned in case the data passed is invalid
-		INVALID_DATA = -2, 
+		INVALID_DATA, 
 		/*! Returned if further initialization is needed
 		 *	Having a need for it should be avoided whenever possible, in individual trackers.
 		 */
-		INIT_NEEDED = -3,
-		/*! Values below this one can be used by tracker developers with whatever
-			meaning they wish to attribute to them.
-		*/
-		FIRST_USER_ERROR = -4 
+		INIT_NEEDED		
 	};
 	Tracker(bool needsTraining, bool needsHint);
 
