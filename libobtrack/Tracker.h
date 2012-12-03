@@ -33,7 +33,7 @@ public:
 	*/
 	virtual void objectShapes(std::vector<const Shape*>& shapes) const = 0;
 
-	virtual bool isSingleObjectTracker();
+	bool isSingleObjectTracker();
 private:
 	bool singleObject; //! Whether this is a single object tracker.
 };

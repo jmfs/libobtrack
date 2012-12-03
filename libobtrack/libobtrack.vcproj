@@ -301,6 +301,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CvPixelBackgroundGMM.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FASTrack.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Object.cpp"
 				>
 			</File>
@@ -312,6 +320,10 @@
 				RelativePath=".\TrackerBase.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\YAFT.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -320,6 +332,14 @@
 			>
 			<File
 				RelativePath=".\CamShiftTracker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CvPixelBackgroundGMM.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FASTrack.h"
 				>
 			</File>
 			<File
@@ -344,6 +364,10 @@
 			</File>
 			<File
 				RelativePath=".\TrainingInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\YAFT.h"
 				>
 			</File>
 		</Filter>

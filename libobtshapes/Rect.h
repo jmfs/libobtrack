@@ -73,7 +73,7 @@ Rect_<T>::Rect_(const cv::Rect_<T>& cvCppRect):
 
 template<typename T> 
 Rect_<T>::Rect_(const Rect_<T>& other):
-		cv::Rect<T>(other) {
+		cv::Rect_<T>(other) {
 }
 
 template<typename T> 
