@@ -71,7 +71,6 @@ int CamShiftTracker::start(const TrainingInfo* ti, int idx) {
 	
 		// Calculate the hue histogram for the object's region
 		cv::MatND& newHist = updateListElement(hists, idx + i, cv::MatND());
-				
 		Rect searchWindow = ti->shapes[0]->boundingRect();
 		sanitizeWindow(searchWindow, ti->img.cols, ti->img.rows);
 		cv::Mat maskROI = newMask(searchWindow);
@@ -95,6 +94,8 @@ int CamShiftTracker::start(const TrainingInfo* ti, int idx) {
 	return ti->shapes.size();
 }
 
+/*! \sa Tracker::feed
+*/
 int CamShiftTracker::feed(const cv::Mat& img) {
 	assert(shapes.size() == masks.size() && masks.size() == hists.size());
 
@@ -135,20 +136,15 @@ void CamShiftTracker::stopTrackingSingleObject(size_t idx) {
 	assert(shapes.size() == masks.size() && 
 		masks.size() == hists.size() && idx >= 0 && idx < shapes.size());
 
-	std::list<cv::MatND>::iterator hIterator = hists.begin();
-	std::list<cv::Mat>::iterator mIterator = masks.begin();
-	std::list<RotatedRect>::iterator sIterator = shapes.begin();
-	std::advance(hIterator, idx);
-	std::advance(mIterator, idx);
-	std::advance(sIterator, idx);
-	hists.erase(hIterator);
-	masks.erase(mIterator);
-	shapes.erase(sIterator);
-
+	eraseListElement(hists, idx);
+	eraseListElement(masks, idx);
+	eraseListElement(shapes, idx);
+	
 	assert(shapes.size() == masks.size() && masks.size() == hists.size());	
 }
 
 void CamShiftTracker::stopTracking() {
+	hists.clear();
 	shapes.clear();
 	hists.clear();
 	

@@ -9,6 +9,15 @@ Tracker::Tracker(bool needsTraining, bool needsHint):
 		started(false) {
 }
 
+/*! Initializes this tracker. Having a need for this should be avoided, but library users
+	should call it anyway, to account for the cases where such a need exists.
+
+	\return A negative value on failure. Any other value if successful.
+*/
+int Tracker::init() {
+	return 0;
+}
+
 /*! Trains an object tracker, according to sample images, or
 	known image/objects pairs. If a tracker needs training, it should
 	always overload this function.
@@ -19,9 +28,6 @@ Tracker::Tracker(bool needsTraining, bool needsHint):
 		If the method hasn't been overriden, always returns true.
 */
 bool Tracker::train(const std::vector<TrainingInfo>& ti) {
-	/*if(singleObject)
-		return trainForSingleObject(ti);*/
-
 	trained = true;
 	return true;
 }
@@ -38,52 +44,9 @@ bool Tracker::train(const std::vector<TrainingInfo>& ti) {
 	\sa Tracker::trainForSingleObject()
 */
 bool Tracker::train(const TrainingInfo& ti) {
-	/*if(singleObject)
-		return trainForSingleObject(ti);*/
-
 	trained = true;
 	return true;
 }
-
-/*! Trains an object tracker to track an object, using multiple sample images or 
-	(image, object shape) pairs. If there are too many sample images for the 
-	tracker, the first ones will prevail. If the tracker is already trained 
-	for this object, re-does the training. A negative object index tells 
-	the tracker the object is new.
-
-	\param ti Vector with the training info.
-	\param idx The index of the object to change, as reported by objectShapes().
-		If negative, or equal to the current number of tracked objects, a new object will be tracked.
-
-	\return Whether the training has been successful. 
-		If the method hasn't been overriden, always returns true.
-	
-	\sa objectShapes()
-/
-bool Tracker::trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx) {
-	trained = true;
-	return true;
-}
-
-/*! Trains an object tracker to track an object, using a single sample image or
-	(image, object shape) pair. If there are too many sample images for the 
-	tracker, the first ones will prevail. If the tracker is already trained 
-	for this object, re-does the training. A negative object index tells 
-	the tracker the object is new.
-
-	\param ti Vector with the training info.
-	\param idx The index of the object to change, as reported by objectShapes().
-		If negative, or equal to the current number of tracked objects, a new object will be tracked.
-
-	\return Whether the training has been successful. 
-		If the method hasn't been overriden, always returns true.
-	
-	\sa objectShapes()
-/
-bool Tracker::trainForSingleObject(const TrainingInfo& ti, int idx) {
-	trained = true;
-	return true;
-}*/
 
 /*! Stops tracking a single object, deleting its training data.
 		
@@ -93,7 +56,7 @@ bool Tracker::trainForSingleObject(const TrainingInfo& ti, int idx) {
 
 	\sa objectShapes()
 */
-void Tracker::stopTrackingSingleObject(int idx) {
+void Tracker::stopTrackingSingleObject(size_t idx) {
 }
 
 /*! Stops all tracking. Forgets any prior training.
@@ -118,7 +81,7 @@ bool Tracker::isStarted() const {
 
 /*! Appends 2D versions of the shapes found to a vector. This is the 2D rendition
 	from image number forImage. The shapes must be in the same order as the ones in
-	objectShapes3D, and shapes not present in image forImage must be invalid ones.
+	objectShapes, and shapes not present in image forImage must be invalid ones.
 	Invalid shapes include, but are not limited to, an empty Blob, an INVALID_RECT or 
 	INVALID_ROTATED_RECT.
 	The contents are only guaranteed to be valid pointers until the next call to feed().

@@ -22,9 +22,15 @@ public:
 		/*! Returned if further initialization is needed
 		 *	Having a need for it should be avoided whenever possible, in individual trackers.
 		 */
-		INIT_NEEDED = -3 
+		INIT_NEEDED = -3,
+		/*! Values below this one can be used by tracker developers with whatever
+			meaning they wish to attribute to them.
+		*/
+		FIRST_USER_ERROR = -4 
 	};
-	explicit Tracker(bool needsTraining, bool needsHint);
+	Tracker(bool needsTraining, bool needsHint);
+
+	virtual int init();
 
 	/*! Performs an initial object detection, with or without hints,
 	 *  or updates one or more object's current shape and/or appearance models.
@@ -57,7 +63,7 @@ public:
 	virtual bool train(const std::vector<TrainingInfo>& ti);	
 	virtual bool train(const TrainingInfo& ti);	
 	
-	virtual void stopTrackingSingleObject(int idx);
+	virtual void stopTrackingSingleObject(size_t idx);
 	virtual void stopTracking();
 
 	/*! Appends the shapes found to a vector.
@@ -65,19 +71,57 @@ public:
 		\param shapes Output. The found shapes will be appended to this vector.
 	*/
 	virtual void objectShapes(std::vector<const Shape*>& shapes) const = 0;
+	/*! Appends the shapes 
+	*/
 	virtual void objectShapes2D(std::vector<const Shape*>& shapes, int forImage = 0) const;
 
 protected:
+	template<typename T> static T& updateListElement(
+		std::list<T>& list, size_t i, const T& newValue);
+	template<typename T> static T& getListElement(std::list<T>& list, size_t i);
+	template<typename T> static void eraseListElement(std::list<T>& list, size_t i);
+
+
 	bool trained; //! If true, this tracker has already been trained and it is ready to start tracking objects
 	bool started; //! If true, initial object detection has been done
 
 private:	
 	bool _needsTraining; //! Specifies if this tracker needs to be trained by the train() function
-	/*! Whether this tracker needs an initial hint to the object's position and/or category.
+	/*! Whether this tracker needs an initial hint to the object's position.
 	*/
 	bool _needsHint; 
 };
 
+template<typename T> T& Tracker::updateListElement(
+				std::list<T>& l, size_t idx, const T& newValue) {
+	assert(idx >= 0 && idx <= l.size());
+	if(idx == l.size()) {
+		l.push_back(newValue);
+		return l.back();
+	}
+	else {
+		std::list<T>::iterator it = l.begin();
+		std::advance(it, idx);
+		*it = newValue;
+		return *it;
+	}
 }
+
+template<typename T> T& Tracker::getListElement(std::list<T>& list, size_t idx) {
+	assert(idx >= 0 && idx < list.size());
+	std::list<T>::iterator it = list.begin();
+	std::advance(it, idx);
+	return *it;
+}
+
+template<typename T> void Tracker::eraseListElement(std::list<T>& list, size_t idx) {
+	assert(idx >= 0 && idx < list.size());
+	std::list<T>::iterator it = list.begin();
+	std::advance(it, idx);
+	list.erase(it);
+}
+
+}
+
 
 #endif

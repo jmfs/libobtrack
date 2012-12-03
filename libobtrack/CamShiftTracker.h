@@ -70,27 +70,8 @@ protected:
 	int _bins, _sMin, _vMin, _vMax;	
 	std::list<cv::MatND> hists; //! The hue histogram
 	std::list<RotatedRect> shapes;
-	std::list<cv::Mat> masks;
-	
-	template<typename T> T& updateListElement(
-		std::list<T>& list, int i, const T& newValue);
-
-	
+	std::list<cv::Mat> masks;	
 };
-
-template<typename T> T& CamShiftTracker::updateListElement(
-				std::list<T>& l, int idx, const T& newValue) {
-	if(idx == l.size()) {
-		l.push_back(newValue);
-		return l.back();
-	}
-	else {
-		std::list<T>::iterator it = l.begin();
-		std::advance(it, idx);
-		*it = newValue;
-		return *it;
-	}
-}
 
 }
 

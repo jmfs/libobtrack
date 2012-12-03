@@ -72,6 +72,8 @@ KinectTracker::KinectTracker(xn::Context& context):
 {
 }
 
+/*! Initializes OpenNI.
+	\return*/
 int KinectTracker::init() {
 	XnStatus status;
 	xn::EnumerationErrors errors;
@@ -79,14 +81,14 @@ int KinectTracker::init() {
 	status = context.InitFromXmlFile("../kinect.xml", &errors);	
 
 	if(status != XN_STATUS_OK)
-		return status;	
+		return -static_cast<int>(status);	
 	status = context.FindExistingNode(XN_NODE_TYPE_DEPTH, depthNode);
 	if(status != XN_STATUS_OK)
-		return status;
+		return -static_cast<int>(status);
 
 	status = context.FindExistingNode(XN_NODE_TYPE_USER, userNode);
 	if(status != XN_STATUS_OK)
-		return status;
+		return -static_cast<int>(status);
 
 	if (!userNode.IsCapabilitySupported(XN_CAPABILITY_SKELETON) ||
 			!userNode.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION)) {
