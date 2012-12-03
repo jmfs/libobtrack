@@ -3,6 +3,8 @@
 
 #include "Tracker.h"
 #include "Blob.h"
+#include "Skeleton.h"
+
 #include <XnCppWrapper.h>
 #include <map>
 
@@ -11,7 +13,6 @@ namespace obt {
 class KinectTracker : public Tracker {
 public:
 	explicit KinectTracker(xn::Context& context);
-	explicit KinectTracker(bool manage = true);
 	int init();
 
 	const xn::Context& getContext() const;
@@ -30,12 +31,21 @@ private:
 	static void XN_CALLBACK_TYPE CalibrationStarted(xn::SkeletonCapability& skeleton, XnUserID user, void* instance);
 	static void XN_CALLBACK_TYPE CalibrationEnded(xn::SkeletonCapability& skeleton, XnUserID user, XnBool bSuccess, void* instance);
 
-	/*! Whether this tracker manages the OpenNI context's lifecyclef.
+	/*! Conversion from OpenNI skeleton joints to obtrack skeleton joints.
+		Its size is MAX_JOINTS + 1, since, as of 2011-05-25, 
+		OpenNI's enum starts at 1, while libobtrack's starts at the C++ default of 0
+	*/
+	static int obtrackOpenNIEquivalents[Skeleton::MAX_JOINTS + 1];
+	
+	void updateSkeleton();
+
+	/* Whether this tracker manages the OpenNI context's lifecycle.
 		Defaults to true, but the option exists since the class' user may want
 		to manage the context by himself, for instance, to access the data
 		from the visible light camera.
 	*/
-	bool manageContext; 
+	//bool manageContext; 
+
 	/*! Reference to the OpenNI context.
 		It is a reference, since this tracker can't possibly know whether the caller wishes
 		to get data from the visible light camera, and because the caller
@@ -43,7 +53,6 @@ private:
 	*/
 	xn::Context& context;
 	
-
 	xn::UserGenerator userNode;		//! An OpenNI user generator
 	xn::DepthGenerator depthNode;	//! An OpenNI depth generator
 
@@ -51,12 +60,12 @@ private:
 
 	XnCallbackHandle userCBs, calibrationCBs, poseCBs;
 
-	//TODO: Store the skeleton
 	/*! A user's skeleton, if it is detected. The Kinect can only reliably 
 		detect and track one skeleton (at least using OpenNI, as of 2011-09-05),
 		so only one is saved.
 	*/
-	// Skeleton skel; 
+	Skeleton skel;
+
 	int skelUser;		//! Which user the saved skeleton belongs to, or 0 if none
 };
 
