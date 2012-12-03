@@ -10,6 +10,9 @@ namespace obt {
 
 class RotatedRect;
 
+/*! Represents a blob. It merely encapsulates a pixel vector.
+	For further details, see \ref Shape.
+*/
 class Blob : public Shape {
 	typedef std::vector<cv::Point> Pixels;
 
@@ -35,7 +38,7 @@ protected:
 	std::vector<cv::Point> pixels; //! The pixel coordinates of the pixels in this Blob.
 
 	/*! The bounds for this Blob. If there are no points in the Blob, at least minX will be equal to 
-		std::numeric_limits<int>::min(). Not really an invalid value, just very unlikely to happen.
+		std::numeric_limits<int>::min().
 	*/
 	mutable int minX, minY, maxX, maxY;
 };

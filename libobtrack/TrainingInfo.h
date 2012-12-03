@@ -8,6 +8,8 @@ namespace obt {
 
 class Shape;
 
+/*! Stores object hints for use in \ref Tracker::start
+*/
 class TrainingInfo {
 public:	
 	cv::Mat img; //! An image

@@ -11,6 +11,11 @@
 
 namespace obt {
 
+/*! A tracker which gets user positions from OpenNI.
+	Returns object shapes in both Blobs and Skeletons, if available.
+	Only one skeleton can be tracked at a time, but as many as 5 blobs
+	have been tested to be successfully tracked.
+*/
 class KinectTracker : public Tracker {
 public:
 	explicit KinectTracker(xn::Context& context);

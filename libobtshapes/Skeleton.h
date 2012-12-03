@@ -7,6 +7,9 @@ namespace obt {
 
 class JointInfo;
 
+/*! Represents a human skeleton shape. It is made out of a number
+	of joints, described in the \ref Skeleton::Joint enum.
+*/
 class Skeleton : public Shape {
 public:
 	/*! All the possible joints.
@@ -78,6 +81,10 @@ private:
 		cv::Point3f* min, cv::Point3f* max, cv::Point3f* avg) const;	
 };
 
+/*! Stores information about a single skeleton joint.
+	Includes its estimated position and orientation, as well as the confidence
+	in each.
+*/
 class JointInfo {
 public:
 	JointInfo(const cv::Point3f& position, float positionConfidence, 

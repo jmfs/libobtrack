@@ -38,7 +38,6 @@ public:
 	 *  If needsHint is false, what to do with any data in ti is up to each individual 
 	 *  tracker's implementation.
 	 *
-	 * \param img The initial image.
 	 * \param ti Hints about the objects in the image.
 	 *		If ti is NULL, or if it doesn't contain data, and needsHint == true, 
 	 *		NO_HINT is returned.

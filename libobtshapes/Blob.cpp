@@ -15,6 +15,9 @@ Blob::Blob(int capacity) {
 	pixels.reserve(capacity);
 }
 
+/*! A Blob is considered invalid if it is empty.
+	\return true if this Blob has no pixels, false otherwise.
+*/
 bool Blob::isInvalid() const {
 	return pixels.empty();
 }
@@ -42,8 +45,8 @@ cv::Rect Blob::boundingRect() const {
 	return cv::Rect(minX, minY, maxX - minX, maxY - minY);
 }
 
-// This runs _really_ slowly, for some reason. Most of the time
-// is spent at cv::AutoBuffer::AutoBuffer .
+// This runs _really_ slowly on Debug builds, for some reason. 
+// Most of the time is spent at cv::AutoBuffer::AutoBuffer .
 cv::RotatedRect Blob::boundingRotatedRect() const {
 	if(pixels.empty())
 		return INVALID_ROTATED_RECT;
@@ -51,6 +54,8 @@ cv::RotatedRect Blob::boundingRotatedRect() const {
 	return cv::minAreaRect(cv::Mat(pixels, false));
 }
 
+/*! Adds a point to this Blob
+*/
 void Blob::addPoint(int x, int y) {
 	maxX = std::max(x, maxX);
 	minX = std::min(x, minX);
@@ -66,16 +71,24 @@ void Blob::clear() {
 	pixels.clear();
 }
 
+/*! Adds this Blob's pixels to result.
+
+	\param result Output. This Blob's pixels will be added to it.
+*/
 void Blob::getPixels(std::vector<cv::Point>& result) const {
 	result.reserve(result.size() + pixels.size());
 	result.insert(result.end(), pixels.begin(), pixels.end());
 }
-	
+
+/*! Gets a const reference to the actual \ref pixels vector
+*/
 const std::vector<cv::Point>& Blob::getPixelsRef() const {
 	return pixels;
 }
 
-std::list<cv::Point>::size_type Blob::size() const {
+/*! Returns the number of pixels in this Blob
+*/
+std::vector<cv::Point>::size_type Blob::size() const {
 	return pixels.size();
 }
 

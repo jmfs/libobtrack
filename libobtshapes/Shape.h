@@ -6,6 +6,9 @@
 
 namespace obt {
 
+/*! Base class for representing abstract shapes.
+	Each shape should derive from this.
+*/
 class Shape {
 public:
 	virtual cv::Point3f centroid() const = 0;

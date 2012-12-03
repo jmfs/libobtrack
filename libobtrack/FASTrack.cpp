@@ -127,7 +127,8 @@ cv::Rect FASTrack::getNewMaskRect(const std::vector<cv::KeyPoint>& keyPoints, co
 			static_cast<int>(maxY - minY + 2 * MAX_MOVEMENT));
 }
 
-/*! Calculates movement average and standard deviation. */
+/*! Calculates movement average and standard deviation. 
+*/
 void FASTrack::movementStats(const std::vector<cv::KeyPoint>& keyPoints, 
 		const std::vector<cv::KeyPoint>& prevKeyPoints, 
 		const std::vector<cv::DMatch>& latestMatch, 
