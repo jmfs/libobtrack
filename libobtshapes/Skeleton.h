@@ -65,9 +65,8 @@ public:
 
 	void getPixels(std::vector<cv::Point>& result) const;
 
+	std::map<Joint, JointInfo>& _getJointMap();
 private:
-	friend class Tracker;
-
 	/*! The active joints are backed by this map */
 	std::map<Joint, JointInfo> joints;
 
@@ -83,8 +82,6 @@ private:
 		cv::Point3f* min, cv::Point3f* max, cv::Point3f* avg) const;
 	void transformJointPositionsAndGetStats(const std::vector<cv::Point3f>& points3D,
 		std::vector<cv::Point2f>* points2D, cv::Point2f* min, cv::Point2f* max) const;
-
-	std::map<Joint, JointInfo>& getJointMap();
 };
 
 class JointInfo {

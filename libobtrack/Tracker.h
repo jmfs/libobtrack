@@ -67,8 +67,6 @@ public:
 	virtual void objectShapes(std::vector<const Shape*>& shapes) const = 0;
 
 protected:
-	std::map<Skeleton::Joint, JointInfo>& skeletonJointMap(Skeleton& skel);
-
 	bool trained; //! If true, this tracker has already been trained and it is ready to start tracking objects
 	bool started; //! If true, initial object detection has been done
 

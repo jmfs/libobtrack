@@ -45,7 +45,7 @@ cv::Rect Blob::boundingRect() const {
 // is spent at cv::AutoBuffer::AutoBuffer .
 cv::RotatedRect Blob::boundingRotatedRect() const {
 	if(cachedRR.size.width == -1 && !pixels.empty()) {
-		cachedRR = cv::minAreaRect(cv::Mat(pixels));
+		cachedRR = cv::minAreaRect(cv::Mat(pixels, false));
 	}
 
 	return cachedRR;

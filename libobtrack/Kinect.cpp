@@ -164,7 +164,7 @@ void KinectTracker::updateSkeleton() {
 	XnUInt16 numJoints = Skeleton::MAX_JOINTS;
 	xn::SkeletonCapability cap = userNode.GetSkeletonCap();
 	cap.EnumerateActiveJoints(openNIJoints, numJoints);
-	std::map<Skeleton::Joint, JointInfo>& joints = skeletonJointMap(skel);
+	std::map<Skeleton::Joint, JointInfo>& joints = skel._getJointMap();
 	joints.clear(); // nuke the map from orbit. It's not the only way to be sure, nor the most 
 	// efficient thing to do, but it's easier than finding out which joints have 
 	// become inactive and deleting just those.
