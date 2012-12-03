@@ -1,6 +1,6 @@
 #include "TLDTracker.h"
+#include "TLD.h"
 #include "Rect.h"
-#include "tld.h"
 #include <stdint.h>
 #include <cv.h>
 #include <iostream>
@@ -13,20 +13,14 @@ TLDTracker::TLDTracker():
 		Tracker(false, true) {
 }
 
-int TLDTracker::init(){ 
-	// TODO
-}
-
 int TLDTracker::start(const TrainingInfo* ti, int idx) {
-	// TODO
-	
 	if(ti == NULL || ti->img.rows <= 0 || ti->img.cols <= 0 || ti->shapes.empty()) {
 		std::cerr << "ERROR: TLDTracker::start: TrainingInfo has "
 			"no objects." << std::endl;
 		return NO_HINT;
 	}
 
-	/*if(idx > static_cast<int>(tld.size())) {
+	if(idx > static_cast<int>(tlds.size())) {
 		std::cerr << "WARNING: TLDTracker::start: idx is greater than the number of currently tracked objects." 
 			"Adding a new object instead. Did you really want to do this?"	<< std::endl;
 		idx = -1;
@@ -35,35 +29,68 @@ int TLDTracker::start(const TrainingInfo* ti, int idx) {
 	int numItemsToAdd;
 	if(idx == -1) {
 		numItemsToAdd = ti->shapes.size();
-		idx = tld.size();
+		idx = tlds.size();
 	}
 	else
-		numItemsToAdd = ti->shapes.size() - (tld.size() - idx);*/
+		numItemsToAdd = ti->shapes.size() - (tlds.size() - idx);
 
-	// TODO
+	cv::Mat gray;
+	cv::cvtColor(ti->img, gray, CV_RGB2GRAY);
+
+	tlds.reserve(tlds.size() + numItemsToAdd);
+	objects.reserve(tlds.size() + numItemsToAdd);
+	for(size_t i = 0; i < ti->shapes.size(); i++) {
+		cv::Rect curRect = ti->shapes[i]->boundingRect();
+		if(idx + i < tlds.size()) {
+			tlds[idx + i]->release();
+		}
+		else
+			tlds.push_back(new tld::TLD());
+		tlds[idx + i]->detectorCascade->imgWidth = gray.cols;
+		tlds[idx + i]->detectorCascade->imgHeight = gray.rows;
+		tlds[idx + i]->detectorCascade->imgWidthStep = gray.step;
+		tlds[idx + i]->selectObject(gray, &curRect);
+	}
+
+	started = true;
+
+	return tlds.size();
 }
 
 int TLDTracker::feed(const cv::Mat& img) {
-	// TODO
+	cv::Mat gray;
+	cv::cvtColor(img, gray, CV_RGB2GRAY);
+	for(size_t i = 0; i < tlds.size(); i++) {
+		tlds[i]->processImage(gray, true);
+		const Rect& curRect = (tlds[i]->currBB == NULL ? INVALID_RECT : *(tlds[i]->currBB));
+		if(i < objects.size())
+			objects[i] = curRect;
+		else
+			objects.push_back(curRect);		
+	}
+	return tlds.size();
 }
 
 void TLDTracker::stopTrackingSingleObject(int idx) {
-	//assert(idx >= 0 && idx < tld.size());
+	assert(idx >= 0 && idx < tlds.size());
 
-	//TODO
+	if(idx < tlds.size() - 1)
+		tlds[idx]->release();		
+	else
+		tlds.pop_back();
+		
 }
 
 void TLDTracker::stopTracking() {
-	// TODO
+	for(int i = 0; i < tlds.size(); i++) {
+	}
+	tlds.clear();
 }
 
 void TLDTracker::objectShapes(std::vector<const Shape*>& shapes) const {
-	// TODO
+	shapes.reserve(shapes.size() + objects.size());
+	for(size_t i = 0; i < objects.size(); i++)
+		shapes.push_back(static_cast<const Shape*>(&(objects[i])));
 }
-
-TLDTracker::~TLDTracker() {
-	// TODO?
-}
-
 
 }

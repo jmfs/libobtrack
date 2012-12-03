@@ -2,6 +2,8 @@
 #define _OBTRACK_TLD_TRACKER_H
 
 #include "Tracker.h"
+#include "TLD.h"
+#include "Rect.h"
 #include <cv.h>
 
 namespace obt {
@@ -20,17 +22,15 @@ class TrainingInfo;
 class TLDTracker : public Tracker {
 public:
 	TLDTracker();
-	int init();
 	int start(const TrainingInfo* ti = NULL, int idx = -1);
 	int feed(const cv::Mat& img);
 	void stopTrackingSingleObject(int idx);
 	void stopTracking();
 	void objectShapes(std::vector<const Shape*>& shapes) const;
 
-	~TLDTracker();
-
 private:
-	
+	std::vector<tld::TLD*> tlds;
+	std::vector<Rect> objects;
 };
 
 }
