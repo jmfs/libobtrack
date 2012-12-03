@@ -80,7 +80,7 @@ void Blob::getPixels(std::vector<cv::Point>& result) const {
 	result.insert(result.end(), pixels.begin(), pixels.end());
 }
 
-/*! Gets a const reference to the actual \ref pixels vector
+/*! Gets a const reference to the actual \ref [Blob::pixels] pixels vector
 */
 const std::vector<cv::Point>& Blob::getPixelsRef() const {
 	return pixels;

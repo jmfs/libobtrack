@@ -167,6 +167,13 @@ int CamShiftTracker::sMin() const {
 	return _sMin;
 }
 
+/*! Sets the mimimum saturation. 
+
+	\param sMin The minimum (inclusive) saturation. It should be between 
+		0 and 255 (inclusively), but will be clamped if it isn't.
+
+	\sa train()
+*/
 void CamShiftTracker::setSMin(int sMin) {
 	_sMin = sMin < 0 ? 0 : std::min(sMin, 255);
 }
@@ -175,6 +182,13 @@ int CamShiftTracker::vMin() const {
 	return _vMin;
 }
 
+/*! Sets the minimum color value. 
+	
+	\param vMin The minimum (inclusive) value. It should be between 0 and 255 
+		(inclusively), but will be clamped if it isn't. If the new minimum 
+		value is greater than or equal to the maximum value, the maximum 
+		value will be reset to 256.
+*/
 void CamShiftTracker::setVMin(int vMin) {
 	if(vMin < 0)
 		vMin = 0;
@@ -189,6 +203,12 @@ int CamShiftTracker::vMax() const {
 	return _vMax;
 }
 
+/*! Sets the maximum color value. 
+	
+	\param vMax The maximum (exclusive) value. It should be between 1 and 256
+		(inclusively), but will be clamped if it isn't.If the new maximum value is less than the 
+		minimum value, the minimum value is reset to 0.
+*/
 void CamShiftTracker::setVMax(int vMax) {
 	if(vMax > 256) 
 		vMax = 256;

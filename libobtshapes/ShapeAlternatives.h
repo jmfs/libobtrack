@@ -5,7 +5,8 @@
 
 namespace obt {
 
-/*
+/*! Stores alternative representations for the same shape.
+	
 	\sa ShapeUnion
 	\sa ShapeIntersection
 	\sa ShapeDifference

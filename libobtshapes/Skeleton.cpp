@@ -11,6 +11,8 @@ bool Skeleton::isSkeleton() const {
 	return true;
 }
 
+/*! Returns whether this skeleton's joint coordinates are in 3D.
+*/
 bool Skeleton::is3D() const {
 	return _is3D;
 }

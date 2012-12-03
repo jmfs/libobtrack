@@ -91,6 +91,8 @@ private:
 	bool _needsHint; 
 };
 
+/*! Updates a list element. If idx == l.size(), adds a value to the end of the list,
+*/
 template<typename T> T& Tracker::updateListElement(
 				std::list<T>& l, size_t idx, const T& newValue) {
 	assert(idx >= 0 && idx <= l.size());
@@ -106,6 +108,8 @@ template<typename T> T& Tracker::updateListElement(
 	}
 }
 
+/*! Gets a list's element by index.
+*/
 template<typename T> T& Tracker::getListElement(std::list<T>& list, size_t idx) {
 	assert(idx >= 0 && idx < list.size());
 	std::list<T>::iterator it = list.begin();
@@ -113,6 +117,8 @@ template<typename T> T& Tracker::getListElement(std::list<T>& list, size_t idx) 
 	return *it;
 }
 
+/*! Erases a list's element by index.
+*/
 template<typename T> void Tracker::eraseListElement(std::list<T>& list, size_t idx) {
 	assert(idx >= 0 && idx < list.size());
 	std::list<T>::iterator it = list.begin();

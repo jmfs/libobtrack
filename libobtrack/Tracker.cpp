@@ -5,7 +5,7 @@ namespace obt {
 Tracker::Tracker(bool needsTraining, bool needsHint):
 		_needsTraining(needsTraining),
 		_needsHint(needsHint),
-		trained(!needsTraining),
+		trained(false),
 		started(false) {
 }
 
@@ -66,20 +66,21 @@ void Tracker::stopTracking() {
 	started = false;
 }
 
+/*! Returns whether this Tracker needs training data prior to working.
+	The Tracker's author can choose to statically load its training
+	data, without using the \ref train function. In such a case, needsTraining
+	should be set to false.
+*/
 bool Tracker::needsTraining() const {
 	return _needsTraining;
 }
 
+/*! Returns whether this Tracker needs a hint to determine the tracked
+	object's initial position. If true, such a hint should be passed to the 
+	\ref start function.
+*/
 bool Tracker::needsHint() const {
 	return _needsHint;
-}
-
-bool Tracker::isTrained() const {
-	return trained;
-}
-
-bool Tracker::isStarted() const {
-	return started;
 }
 
 

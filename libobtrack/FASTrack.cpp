@@ -15,6 +15,12 @@ namespace obt {
 const cv::Mat FASTrack::DEFAULT_H = cv::Mat::eye(3, 3, CV_32FC1);
 const float FASTrack::MAX_MOVEMENT = 25.0f;
 
+/*! Creates a new point tracker, using the supplied feature detector,
+	descriptor extractor, and descriptor matcher.
+
+	The images supplied to the tracker be scaled by the scaleX
+	and scaleY factors, before tracking is done.
+*/
 FASTrack::FASTrack(cv::Ptr<cv::FeatureDetector> featureDetector,
 			cv::Ptr<cv::DescriptorExtractor> descriptorExtractor,
 			cv::Ptr<cv::DescriptorMatcher> descriptorMatcher, 

@@ -11,8 +11,16 @@ namespace obt {
 */
 class Shape {
 public:
+	/*! Returns the Shape's centroid.
+		If the Shape is 2D, the centroid's Z coordinate will be 0.0f.
+	*/
 	virtual cv::Point3f centroid() const = 0;
+	/*! Returns an axis-aligned bounding rectangle for the shape.
+	*/
 	virtual cv::Rect boundingRect() const = 0;
+	/*! Returns the smallest possible bounding rectangle for this shape
+		(may not be axis-aligned).
+	*/
 	virtual cv::RotatedRect boundingRotatedRect() const = 0;
 
 	virtual bool isInvalid() const;
