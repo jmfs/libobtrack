@@ -8,16 +8,19 @@ void XN_CALLBACK_TYPE KinectTracker::FoundUser(
 			xn::UserGenerator& generator, XnUserID user, void* cookie) {
 	KinectTracker* instance = static_cast<KinectTracker*>(cookie);	
 	std::cerr << "Found user " << user << std::endl;
-	instance->userNode.GetPoseDetectionCap().StartPoseDetection("Psi", user);
+	if(instance->getSkeleton)
+		instance->userNode.GetPoseDetectionCap().StartPoseDetection("Psi", user);
 	return;
 }
 
 void XN_CALLBACK_TYPE KinectTracker::LostUser(
 			xn::UserGenerator& generator, XnUserID user, void* cookie) {
 	KinectTracker* instance = static_cast<KinectTracker*>(cookie);
-	if(user == instance->skelUser)
-		instance->skelUser = 0;
-	instance->userNode.GetSkeletonCap().StopTracking(user);
+	if(instance->getSkeleton) {
+		if(user == instance->skelUser)
+			instance->skelUser = 0;
+		instance->userNode.GetSkeletonCap().StopTracking(user);
+	}
 	std::cerr << "Lost user " << user << std::endl;
 }
 
@@ -25,6 +28,7 @@ void XN_CALLBACK_TYPE KinectTracker::PoseDetected(
 			xn::PoseDetectionCapability& pose, 
 			const XnChar* strPose, XnUserID user, void* cookie) { 
 	KinectTracker* instance = static_cast<KinectTracker*>(cookie);
+	assert(instance->getSkeleton);
 	instance->userNode.GetSkeletonCap().RequestCalibration(user, TRUE);
 	instance->userNode.GetPoseDetectionCap().StopPoseDetection(user);
 }
@@ -32,12 +36,14 @@ void XN_CALLBACK_TYPE KinectTracker::PoseDetected(
 void XN_CALLBACK_TYPE KinectTracker::CalibrationStarted(
 			xn::SkeletonCapability& skeleton, XnUserID user, void* cookie) {
 	std::cerr << "Calibrating for skeleton..." << std::endl;
+	assert(static_cast<KinectTracker*>(cookie)->getSkeleton);
 }
 
 void XN_CALLBACK_TYPE KinectTracker::CalibrationEnded(
 			xn::SkeletonCapability& skeleton, 
 			XnUserID user, XnBool bSuccess, void* cookie) {
 	KinectTracker* instance = static_cast<KinectTracker*>(cookie);
+	assert(instance->getSkeleton);
 	std::cerr << "Calibration done [" << user << "] " << (bSuccess?"":"un") << "successfully" << std::endl;
 	if (bSuccess) {
 		instance->userNode.GetSkeletonCap().SaveCalibrationData(user, 0);
@@ -60,11 +66,13 @@ void XN_CALLBACK_TYPE KinectTracker::CalibrationEnded(
 	the provided context to get the	data it will need.
 
 	\param context A reference to an OpenNI context. 
-		Must be initialized prior to the call to init.
+		This context must be initialized prior to the call to init.
+	\param wantSkeleton Whether the Kinect should try to detect a user's skeleton.
 */
-KinectTracker::KinectTracker(xn::Context& context):
+KinectTracker::KinectTracker(xn::Context& context, bool wantSkeleton):
 		Tracker(false, false),
 		context(context),
+		getSkeleton(wantSkeleton),
 		userCBs(NULL),
 		poseCBs(NULL),
 		calibrationCBs(NULL),
@@ -74,12 +82,13 @@ KinectTracker::KinectTracker(xn::Context& context):
 		userSkelAlternative(2),
 		user2DSkelAlternative(2) {
 	users.reserve(4); // Paraphrasing infamous words, this should be enough for everyone.
-				// There isn't a problem if it's exceeded anyway.
+				// There isn't a big problem if it's exceeded anyway.
 }
 
 /*! Initializes OpenNI.
-	\return XN_STATUS_OK if everything went right, -xnStatus (see OpenNI docs) if something went wrong, or -1,
-		if the device doesn't support pose estimation/skeleton detection. */
+	\return XN_STATUS_OK if everything went right, -XnStatus (see OpenNI docs) if something went wrong, or 
+		\ref SKELETON_NOT_AVAILABLE, if the device doesn't support pose estimation/skeleton detection. 
+		In this last case, the tracker can still be used, albeit without that capability. */
 int KinectTracker::init() {
 	XnStatus status = context.FindExistingNode(XN_NODE_TYPE_DEPTH, depthNode);
 	if(status != XN_STATUS_OK)
@@ -89,43 +98,49 @@ int KinectTracker::init() {
 	if(status != XN_STATUS_OK)
 		return -static_cast<int>(status);
 
-	if (!userNode.IsCapabilitySupported(XN_CAPABILITY_SKELETON) ||
-			!userNode.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION)) {
-		return -1; //TODO: Ability to work without these (i.e. blobs only)
+	if(getSkeleton == true && (!userNode.IsCapabilitySupported(XN_CAPABILITY_SKELETON) ||
+			!userNode.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION))) {
+		getSkeleton = false;
+		status = SKELETON_NOT_AVAILABLE;
 	}
 
-	// try to detect all joints
-	userNode.GetSkeletonCap().SetSkeletonProfile(XN_SKEL_PROFILE_ALL); 
-
-	/*	OpenNI API clarifications-that-should-have-been-in-the-docs:
-	
-		FoundUser is called when a user is found in the frame for the first time.
-		LostUser is called either when the sensor is obscured, or ~10 seconds 
-		after the user leaves the frame.
-		
-		When the user leaves the frame, her center of mass is reset to (0, 0, 0).
-
-		In NITE's "Players" example, although skeleton data appears to be lost 
-		when the user leaves the frame, this is not the case.
-
-		The matrix for joint orientation is a 9-element array. Is the array row-major,
-		or column-major? This post (http://groups.google.com/group/openni-dev/browse_thread/thread/18ee244d608fa642)
-		seems to imply it is row-major.
-	*/
-	
 	userNode.RegisterUserCallbacks(
 		KinectTracker::FoundUser, KinectTracker::LostUser, this, userCBs);
-	userNode.GetSkeletonCap().RegisterCalibrationCallbacks(
-		KinectTracker::CalibrationStarted, KinectTracker::CalibrationEnded, this, calibrationCBs);
-	userNode.GetPoseDetectionCap().RegisterToPoseCallbacks(
-		KinectTracker::PoseDetected, NULL, this, poseCBs);
+
+	if(getSkeleton) {
+		// try to detect all joints
+		userNode.GetSkeletonCap().SetSkeletonProfile(XN_SKEL_PROFILE_ALL); 
+
+		/*	OpenNI API clarifications-that-should-have-been-in-the-docs:
+	
+			FoundUser is called when a user is found in the frame for the first time.
+			LostUser is called either when the sensor is obscured, or ~10 seconds 
+			after the user leaves the frame.
+		
+			When the user leaves the frame, her center of mass is reset to (0, 0, 0).
+
+			In NITE's "Players" example, although skeleton data appears to be lost 
+			when the user leaves the frame, this is not the case.
+
+			The matrix for joint orientation is a 9-element array. Is the array row-major,
+			or column-major? This post (http://groups.google.com/group/openni-dev/browse_thread/thread/18ee244d608fa642)
+			seems to imply it is row-major.
+		*/
+	
+		userNode.GetSkeletonCap().RegisterCalibrationCallbacks(
+			KinectTracker::CalibrationStarted, KinectTracker::CalibrationEnded, this, calibrationCBs);
+		userNode.GetPoseDetectionCap().RegisterToPoseCallbacks(
+			KinectTracker::PoseDetected, NULL, this, poseCBs);
+	}
 
 	return status;
 }
 
 KinectTracker::~KinectTracker() {
-	userNode.GetSkeletonCap().UnregisterCalibrationCallbacks(calibrationCBs);
-	userNode.GetPoseDetectionCap().UnregisterFromPoseCallbacks(poseCBs);
+	if(getSkeleton) {
+		userNode.GetSkeletonCap().UnregisterCalibrationCallbacks(calibrationCBs);
+		userNode.GetPoseDetectionCap().UnregisterFromPoseCallbacks(poseCBs);
+	}
 	userNode.UnregisterUserCallbacks(userCBs);
 }
 
@@ -135,6 +150,7 @@ int KinectTracker::start(const TrainingInfo* ti, int idx) {
 }
 
 void KinectTracker::updateSkeleton() {
+	assert(getSkeleton);
 	if(skelUser == 0)
 		return;
 	XnSkeletonJoint openNIJoints[Skeleton::MAX_JOINTS];

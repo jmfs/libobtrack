@@ -197,7 +197,7 @@ void Skeleton::getPixels(std::vector<cv::Point>& result) const {
 }
 
 /*! Gets a writable reference to the joint map.
-	This shouldn't be used outside of a \ref Tracker.
+	This should never, EVER, be used outside of a \ref Tracker.
 	Use \ref Skeleton::getAllActiveJoints instead.
 */
 std::map<Skeleton::Joint, JointInfo>& Skeleton::_getJointMap() {

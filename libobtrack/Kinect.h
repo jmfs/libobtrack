@@ -18,8 +18,10 @@ namespace obt {
 */
 class KinectTracker : public Tracker {
 public:
-	explicit KinectTracker(xn::Context& context);
+	KinectTracker(xn::Context& context, bool wantSkeleton);
 	int init();
+
+	static const int SKELETON_NOT_AVAILABLE = 1;
 
 	const xn::Context& getContext() const;
 	
@@ -71,6 +73,12 @@ private:
 	Skeleton skel, skel2D;
 	ShapeAlternatives userSkelAlternative, user2DSkelAlternative;
 
+	/*! Before init: whether we should try to get skeletons.
+		After init: whether we are trying to get skeletons.
+
+		These two only differ when the skeleton detecting capability isn't present.
+	*/
+	bool getSkeleton; 
 	int skelUser;		//! Which user the saved skeleton belongs to, or 0 if none
 };
 
