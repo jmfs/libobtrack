@@ -79,6 +79,7 @@ KinectTracker::KinectTracker(xn::Context& context, bool wantSkeleton):
 		skelUser(0), // OpenNI users start from 1, so using 0 for "no user" is safe.
 		skel(true),
 		skel2D(false),
+		wasInit(false),
 		userSkelAlternative(2),
 		user2DSkelAlternative(2) {
 	users.reserve(4); // Paraphrasing infamous words, this should be enough for everyone.
@@ -98,6 +99,7 @@ int KinectTracker::init() {
 	if(status != XN_STATUS_OK)
 		goto initFailure;
 
+	wasInit = true;
 	if(getSkeleton == true && (!userNode.IsCapabilitySupported(XN_CAPABILITY_SKELETON) ||
 			!userNode.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION))) {
 		getSkeleton = false;
