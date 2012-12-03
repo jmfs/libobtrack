@@ -16,7 +16,7 @@ class Blob : public Shape {
 public:
 	explicit Blob(int capacity = 100);
 
-	cv::Point2f centroid() const;
+	cv::Point3f centroid() const;
 	cv::Rect boundingRect() const;
 	cv::RotatedRect boundingRotatedRect() const;
 
@@ -36,13 +36,6 @@ protected:
 		std::numeric_limits<int>::min(). Not really an invalid value, just very unlikely to happen.
 	*/
 	mutable int minX, minY, maxX, maxY;
-
-	/*! Both the centroid and the bounding rotated rectangle (the smallest possible rectangle
-		containing all of the Blob's pixels) are pretty hard to calculate, so they are cached
-		so any subsequent calls to centroid() or boundingRotatedRect() return them at once.
-	*/
-	mutable cv::Point2f* cachedCentroid;
-	mutable RotatedRect cachedRR; //! /sa cachedCentroid
 };
 
 }

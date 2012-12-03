@@ -5,10 +5,11 @@
 #include <cv.h>
 #include "Tracker.h"
 #include "RotatedRect.h"
-#include "Rect.h"
 
 namespace obt {
 
+template <typename T> class Rect_;
+typedef Rect_<int> Rect;
 
 /*! An object tracker, using the CAMSHIFT algorithm, as provided by OpenCV.
 	Uses the HSV color space.

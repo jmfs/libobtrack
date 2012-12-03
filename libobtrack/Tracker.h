@@ -9,7 +9,7 @@
 
 namespace obt {
 
-/*! The base class for all based trackers.
+/*! The base class for all object trackers.
 	Can handle both single-object and multi-object trackers.
 	To keep the interface consistent, single-object trackers will
 	be run once for each object, whenever they are tracking more than a single object.
@@ -53,7 +53,6 @@ public:
 	bool needsHint() const;
 	bool isTrained() const;
 	bool isStarted() const;
-	bool isSingleObjectTracker() const;
 
 	virtual bool train(const std::vector<TrainingInfo>& ti);	
 	virtual bool train(const TrainingInfo& ti);	
@@ -62,9 +61,11 @@ public:
 	virtual void stopTracking();
 
 	/*! Appends the shapes found to a vector.
+		The contents are only guaranteed to be valid pointers until the next call to feed().
 		\param shapes Output. The found shapes will be appended to this vector.
 	*/
 	virtual void objectShapes(std::vector<const Shape*>& shapes) const = 0;
+	virtual void objectShapes2D(std::vector<const Shape*>& shapes, int forImage = 0) const;
 
 protected:
 	bool trained; //! If true, this tracker has already been trained and it is ready to start tracking objects

@@ -1,6 +1,7 @@
 #include "CamShiftTracker.h"
 #include "RotatedRect.h"
 #include "Rect.h"
+#include "Shape.h"
 #include <cv.h>
 #include <algorithm>
 #include <iostream>
@@ -27,7 +28,7 @@ namespace obt {
 	This is needed, since whitish colors have ambiguous hues at high values.
 */
 CamShiftTracker::CamShiftTracker(int bins, int sMin, int vMin, int vMax):
-		Tracker(false, true, true),
+		Tracker(false, true),
 		_bins(bins),
 		_sMin(sMin),
 		_vMin(std::min(vMin, vMax)),
@@ -40,13 +41,13 @@ int CamShiftTracker::start(const TrainingInfo* ti, int idx) {
 	assert(shapes.size() == masks.size() && masks.size() == hists.size());
 
 	if(ti == NULL || ti->img.rows <= 0 || ti->img.cols <= 0 || ti->shapes.empty()) {
-		std::clog << "ERROR: CamShiftTracker::start: TrainingInfo has "
+		std::cerr << "ERROR: CamShiftTracker::start: TrainingInfo has "
 			"no objects." << std::endl;
 		return NO_HINT;
 	}
 
 	if(idx > static_cast<int>(shapes.size())) {
-		std::clog << "WARNING: CamShiftTracker::start: idx is greater than the number of currently tracked objects." 
+		std::cerr << "WARNING: CamShiftTracker::start: idx is greater than the number of currently tracked objects." 
 			"Adding a new object instead. Did you really want to do this?"	<< std::endl;
 		idx = shapes.size();
 	}
@@ -54,7 +55,7 @@ int CamShiftTracker::start(const TrainingInfo* ti, int idx) {
 	if(idx < 0)
 		idx = shapes.size();
 
-	for(int i = 0; i < ti->shapes.size(); i++) {
+	for(size_t i = 0; i < ti->shapes.size(); i++) {
 		// CamShift prep
 		cv::Mat& newMask = updateListElement(masks, idx + i, 
 			static_cast<cv::Mat>(cv::Mat::zeros(ti->img.rows, ti->img.cols, CV_8UC1)));	
@@ -98,7 +99,7 @@ int CamShiftTracker::feed(const cv::Mat& img) {
 	assert(shapes.size() == masks.size() && masks.size() == hists.size());
 
 	if(!started) {
-		std::clog << "ERROR: CamShiftTracker::feed: need to call start() first." << std::endl;
+		std::cerr << "ERROR: CamShiftTracker::feed: need to call start() first." << std::endl;
 		return NO_HINT;
 	}
 
@@ -194,18 +195,23 @@ int CamShiftTracker::vMax() const {
 
 void CamShiftTracker::setVMax(int vMax) {
 	if(vMax > 256) 
-		_vMax = 256;
+		vMax = 256;
 	else if(vMax < _vMin)
 		_vMin = 0;
-	else
-		_vMax = std::max(0, _vMax);
+	
+	_vMax = std::max(0, vMax);
 }
 
+/*! See \ref Tracker::objectShapes. 
+	Additional info: The returned shapes are \ref RotatedRect "RotatedRects". 
+*/
 void CamShiftTracker::objectShapes(std::vector<const Shape*>& out) const {	
 	for(std::list<RotatedRect>::const_iterator i = shapes.begin(); i != shapes.end(); i++)
 		out.push_back(static_cast<const Shape*>(&(*i)));
 }
 
+/*! Clips the initial search window to inside the video boundaries.
+*/
 void CamShiftTracker::sanitizeWindow(Rect& rect, int width, int height) {
 	if(rect.x < 0) {
 		// x is negative, so in reality we are subtracting from the width

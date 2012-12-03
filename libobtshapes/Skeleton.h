@@ -13,7 +13,7 @@ public:
 		Left and right sides refer to the _user's_ real-world
 		left and right.
 	*/
-	enum Joint {
+	static enum Joint {
 		HEAD,
 		NECK,  
 		TORSO,
@@ -40,15 +40,15 @@ public:
 		RIGHT_FOOT
 	};
 
+	Skeleton(bool is3D);
+
 	/*! The number of possible different joints.
 		It's the number of different possibilities on the Joints enum.
 	*/
 	static const int MAX_JOINTS = 24;
 
-	/*! A function projecting a 3D point onto a 2D plane. */
-	typedef cv::Point2f (*TransformationCallback)(const cv::Point3f&);
-
-	explicit Skeleton(TransformationCallback cb = NULL);
+	bool isSkeleton() const;
+	bool is3D() const;
 
 	void activeJoints(std::vector<Joint>& out) const;
 	const std::map<Joint, JointInfo>& getAllActiveJoints() const;
@@ -57,8 +57,7 @@ public:
 
 	const JointInfo* getJointInfo(Joint j) const;
 
-	cv::Point2f centroid() const;
-	cv::Point3f centroid3D() const;
+	cv::Point3f centroid() const;
 
 	cv::Rect boundingRect() const;
 	cv::RotatedRect boundingRotatedRect() const;
@@ -70,23 +69,19 @@ private:
 	/*! The active joints are backed by this map */
 	std::map<Joint, JointInfo> joints;
 
+	bool _is3D;
+
 	// TODO: add confidence thresholds
-	
-	/*! A callback for transforming 3D points into their equivalent image
-		coordinates. If NULL, the skeleton is assumed to be 2D,
-		already in image coordinates.
-	*/
-	TransformationCallback toVideoCoordinates;
 
 	void getJointPositionsAndStats(std::vector<cv::Point3f>* points, 
-		cv::Point3f* min, cv::Point3f* max, cv::Point3f* avg) const;
-	void transformJointPositionsAndGetStats(const std::vector<cv::Point3f>& points3D,
-		std::vector<cv::Point2f>* points2D, cv::Point2f* min, cv::Point2f* max) const;
+		std::vector<cv::Point2f>* points2D, 
+		cv::Point3f* min, cv::Point3f* max, cv::Point3f* avg) const;	
 };
 
 class JointInfo {
 public:
-	JointInfo(cv::Point3f position, float positionConfidence, cv::Mat orientation, float orientationConfidence);
+	JointInfo(const cv::Point3f& position, float positionConfidence, 
+		const cv::Mat& orientation, float orientationConfidence);
 
 	const cv::Point3f& position() const;
 	float positionConfidence() const;
@@ -107,6 +102,10 @@ private:
 	//friend class Tracker;
 	// setters
 };
+
+/*! Shorthand for std::map<obt::Skeleton::Joint, obt::JointInfo>
+*/
+typedef std::map<Skeleton::Joint, JointInfo> JointMap;
 
 }
 

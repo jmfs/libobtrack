@@ -6,6 +6,8 @@
 
 namespace obt {
 
+class Shape;
+
 class TrainingInfo {
 public:	
 	cv::Mat img; //! An image

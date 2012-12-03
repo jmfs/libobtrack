@@ -1,3 +1,4 @@
+#include "Shape.h"
 #include "FASTrack.h"
 #include "Rect.h"
 #include <cv.h>
@@ -18,7 +19,7 @@ FASTrack::FASTrack(cv::Ptr<cv::FeatureDetector> featureDetector,
 			cv::Ptr<cv::DescriptorExtractor> descriptorExtractor,
 			cv::Ptr<cv::DescriptorMatcher> descriptorMatcher, 
 			float scaleX, float scaleY):
-		Tracker(false, true, true),
+		Tracker(false, true),
 		scaleX(scaleX),
 		scaleY(scaleY),
 		detector(featureDetector),
@@ -34,7 +35,7 @@ FASTrack::FASTrack(cv::Ptr<cv::FeatureDetector> featureDetector,
 
 int FASTrack::start(const TrainingInfo* ti, int idx) {
 	/*if(mask.rows != img.rows || mask.cols != img.cols || started) {
-		std::clog << "ERROR: Can't detect objects. Training images";
+		std::cerr << "ERROR: Can't detect objects. Training images";
 		return -1;
 	}*/
 	/*cv::Mat gray;
@@ -72,10 +73,10 @@ cv::Rect FASTrack::getNewMaskRect() const {
 	float maxY = minFloat;
 
 	if(keyPoints->empty()) {
-		minX = prevMaskRect.x;
-		minY = prevMaskRect.y;
-		maxX = prevMaskRect.x + prevMaskRect.width;
-		maxY = prevMaskRect.y + prevMaskRect.height;		
+		minX = static_cast<float>(prevMaskRect.x);
+		minY = static_cast<float>(prevMaskRect.y);
+		maxX = static_cast<float>(prevMaskRect.x + prevMaskRect.width);
+		maxY = static_cast<float>(prevMaskRect.y + prevMaskRect.height);		
 	}
 	else {	
 		for(std::vector<cv::KeyPoint>::size_type i = 0; i < keyPoints->size(); i++) {
@@ -86,10 +87,10 @@ cv::Rect FASTrack::getNewMaskRect() const {
 		}
 	}
 	
-	return cv::Rect(minX - MAX_MOVEMENT, 
-			minY - MAX_MOVEMENT, 
-			maxX - minX + 2 * MAX_MOVEMENT, 
-			maxY - minY + 2 * MAX_MOVEMENT);
+	return cv::Rect(static_cast<int>(minX - MAX_MOVEMENT),
+			static_cast<int>(minY - MAX_MOVEMENT),
+			static_cast<int>(maxX - minX + 2 * MAX_MOVEMENT),
+			static_cast<int>(maxY - minY + 2 * MAX_MOVEMENT));
 }
 
 /*! Calculates movement average and standard deviation. */
@@ -226,12 +227,15 @@ int FASTrack::feed(const cv::Mat& img) {
 	return 1;
 }
 
+/*! See \ref Tracker::objectShapes. 
+	Additional info: The returned shapes are \ref Rect "Rects". 
+*/
 void FASTrack::objectShapes(std::vector<const Shape*>& shapes) const {
 	for(std::vector<Rect>::size_type i = 0; i < keyPointShapes.size(); i++)
 		shapes.push_back(&(keyPointShapes[i]));
 }
 
-//Converts matching indices to xy points
+//! Converts matching indices to xy points
 void FASTrack::matches2points(const vector<cv::KeyPoint>& train, const vector<cv::KeyPoint>& query,
                     const std::vector<cv::DMatch>& matches, std::vector<cv::Point2f>& pts_train,
                     std::vector<cv::Point2f>& pts_query) {
@@ -259,7 +263,7 @@ void FASTrack::warpKeypoints(const cv::Mat& H, const std::vector<cv::KeyPoint>& 
 	points2keypoints(pts_w, out);
 }
 
-//Takes a descriptor and turns it into an xy point
+//! Takes a descriptor and turns it into an xy point
 void FASTrack::keypoints2points(const std::vector<cv::KeyPoint>& in, std::vector<cv::Point2f>& out) {
 	out.clear();
 	out.reserve(in.size());
@@ -268,7 +272,7 @@ void FASTrack::keypoints2points(const std::vector<cv::KeyPoint>& in, std::vector
 	}
 }
 
-//Takes an xy point and appends that to a keypoint structure
+//! Takes an xy point and appends that to a keypoint structure
 void FASTrack::points2keypoints(const std::vector<cv::Point2f>& in, std::vector<cv::KeyPoint>& out) {
 	out.clear();
 	out.reserve(in.size());

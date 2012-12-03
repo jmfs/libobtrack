@@ -32,7 +32,7 @@ public:
 	*/
 	void points(cv::Point2f pts[]) const;
 
-	cv::Point2f centroid() const;
+	cv::Point3f centroid() const;
 	cv::Rect boundingRect() const;
 	cv::RotatedRect boundingRotatedRect() const;
 

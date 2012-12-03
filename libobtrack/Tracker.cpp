@@ -5,7 +5,7 @@ namespace obt {
 Tracker::Tracker(bool needsTraining, bool needsHint):
 		_needsTraining(needsTraining),
 		_needsHint(needsHint),
-		trained(false),
+		trained(!needsTraining),
 		started(false) {
 }
 
@@ -113,6 +113,27 @@ bool Tracker::isTrained() const {
 
 bool Tracker::isStarted() const {
 	return started;
+}
+
+
+/*! Appends 2D versions of the shapes found to a vector. This is the 2D rendition
+	from image number forImage. The shapes must be in the same order as the ones in
+	objectShapes3D, and shapes not present in image forImage must be invalid ones.
+	Invalid shapes include, but are not limited to, an empty Blob, an INVALID_RECT or 
+	INVALID_ROTATED_RECT.
+	The contents are only guaranteed to be valid pointers until the next call to feed().
+	By default, calls objectShapes(shapes).
+
+	\param shapes Output. The found shapes will be appended to this vector.
+	\param forImage In multi-camera trackers, the image's index. Default: 0.
+
+	\sa INVALID_RECT
+	\sa INVALID_ROTATED_RECT
+	\sa Shape
+	\sa feed
+*/
+void Tracker::objectShapes2D(std::vector<const Shape*>& shapes, int forImage) const {
+	objectShapes(shapes);
 }
 
 }

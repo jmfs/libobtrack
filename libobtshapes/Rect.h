@@ -43,7 +43,7 @@ public:
 	bool contains(const cv::Point_<T>& pt) const;
 
 
-	virtual cv::Point2f centroid() const;
+	virtual cv::Point3f centroid() const;
 	virtual cv::Rect boundingRect() const;
 	virtual cv::RotatedRect boundingRotatedRect() const;
 
@@ -154,10 +154,11 @@ bool Rect_<T>::contains(const cv::Point_<T>& pt) const {
 }
 
 template<typename T> 
-cv::Point2f Rect_<T>::centroid() const {
-	return cv::Point2f(
+cv::Point3f Rect_<T>::centroid() const {
+	return cv::Point3f(
 		static_cast<float>(x + width / 2.0f), 
-		static_cast<float>(y + height / 2.0f));
+		static_cast<float>(y + height / 2.0f),
+		0.0f);
 }
 
 template<typename T> 

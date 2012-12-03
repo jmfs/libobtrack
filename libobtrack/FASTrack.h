@@ -3,8 +3,9 @@
 
 #include <cv.h>
 #include "Tracker.h"
-#include "TrainingInfo.h"
 #include "Rect.h"
+
+class TrainingInfo;
 
 namespace obt {
 
@@ -69,7 +70,7 @@ private:
 	float scaleX, scaleY;		
 
 	cv::Mat mask;
-	obt::Rect prevMaskRect;
+	Rect prevMaskRect;
 
 	std::vector<cv::KeyPoint> keys[2];	
 	cv::Mat descs[2];

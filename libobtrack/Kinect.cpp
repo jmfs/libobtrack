@@ -1,16 +1,13 @@
-#include "Kinect.h"    
-#include "Blob.h"
+#include "Kinect.h"
 #include <iostream>
 
 namespace obt {
 
-int* Skeleton::obtrackOpenNIEquivalents = NULL;
 
 void XN_CALLBACK_TYPE KinectTracker::FoundUser(
 			xn::UserGenerator& generator, XnUserID user, void* cookie) {
 	KinectTracker* instance = static_cast<KinectTracker*>(cookie);	
-
-	std::clog << "Found user " << user << std::endl;
+	std::cerr << "Found user " << user << std::endl;
 	instance->userNode.GetPoseDetectionCap().StartPoseDetection("Psi", user);
 	return;
 }
@@ -21,7 +18,7 @@ void XN_CALLBACK_TYPE KinectTracker::LostUser(
 	if(user == instance->skelUser)
 		instance->skelUser = 0;
 	instance->userNode.GetSkeletonCap().StopTracking(user);
-	std::clog << "Lost user " << user << std::endl;
+	std::cerr << "Lost user " << user << std::endl;
 }
 
 void XN_CALLBACK_TYPE KinectTracker::PoseDetected(
@@ -34,18 +31,25 @@ void XN_CALLBACK_TYPE KinectTracker::PoseDetected(
 
 void XN_CALLBACK_TYPE KinectTracker::CalibrationStarted(
 			xn::SkeletonCapability& skeleton, XnUserID user, void* cookie) {
-	std::clog << "Calibrating for skeleton..." << std::endl;
+	std::cerr << "Calibrating for skeleton..." << std::endl;
 }
 
 void XN_CALLBACK_TYPE KinectTracker::CalibrationEnded(
 			xn::SkeletonCapability& skeleton, 
 			XnUserID user, XnBool bSuccess, void* cookie) {
 	KinectTracker* instance = static_cast<KinectTracker*>(cookie);
-	std::clog << "Calibration done [" << user << "] " << (bSuccess?"":"un") << "successfully" << std::endl;
+	std::cerr << "Calibration done [" << user << "] " << (bSuccess?"":"un") << "successfully" << std::endl;
 	if (bSuccess) {
 		instance->userNode.GetSkeletonCap().SaveCalibrationData(user, 0);
 		instance->userNode.GetSkeletonCap().StartTracking(user);
 		instance->skelUser = user;
+		const Shape* userBlob = &(instance->users[user - 1]);
+		instance->userSkelAlternative.members[0] = userBlob;
+		instance->userSkelAlternative.members[1] = 
+			static_cast<const Shape*>(&instance->skel);
+		instance->user2DSkelAlternative.members[0] = userBlob;
+		instance->user2DSkelAlternative.members[1] = 
+			static_cast<const Shape*>(&instance->skel2D);
 	}
 	else
 		instance->userNode.GetPoseDetectionCap().StartPoseDetection("Psi", user);
@@ -59,39 +63,13 @@ KinectTracker::KinectTracker(xn::Context& context):
 		poseCBs(NULL),
 		calibrationCBs(NULL),
 		skelUser(0), // OpenNI users start from 1, so using 0 for "no user" is safe.
+		skel(true),
+		skel2D(false),
+		userSkelAlternative(2),
+		user2DSkelAlternative(2),
 		users(4) // Paraphrasing infamous words, this should be enough for everyone.
 				// There isn't a problem if it's exceeded anyway.
 {
-	if(obtrackOpenNIEquivalents[XN_SKEL_HEAD] != Skeleton::Joint::HEAD) {
-		obtrackOpenNIEquivalents[XN_SKEL_HEAD] = Skeleton::Joint::HEAD;
-		obtrackOpenNIEquivalents[XN_SKEL_NECK] = Skeleton::Joint::NECK;
-		obtrackOpenNIEquivalents[XN_SKEL_TORSO] = Skeleton::Joint::TORSO;
-		obtrackOpenNIEquivalents[XN_SKEL_WAIST] = Skeleton::Joint::WAIST;
-
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_COLLAR] = Skeleton::Joint::LEFT_COLLAR;
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_SHOULDER] = Skeleton::Joint::LEFT_SHOULDER;
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_ELBOW] = Skeleton::Joint::LEFT_ELBOW;
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_WRIST] = Skeleton::Joint::LEFT_WRIST;
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_HAND] = Skeleton::Joint::LEFT_HAND;
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_FINGERTIP] = Skeleton::Joint::LEFT_FINGERTIP;
-
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_COLLAR] = Skeleton::Joint::RIGHT_COLLAR;
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_SHOULDER] = Skeleton::Joint::RIGHT_SHOULDER;
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_ELBOW] = Skeleton::Joint::RIGHT_ELBOW;
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_WRIST] = Skeleton::Joint::RIGHT_WRIST;
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_HAND] = Skeleton::Joint::RIGHT_HAND;
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_FINGERTIP] = Skeleton::Joint::RIGHT_FINGERTIP;
-
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_HIP] = Skeleton::Joint::LEFT_HIP;
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_KNEE] = Skeleton::Joint::LEFT_KNEE;
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_ANKLE] = Skeleton::Joint::LEFT_ANKLE;
-		obtrackOpenNIEquivalents[XN_SKEL_LEFT_FOOT] = Skeleton::Joint::LEFT_FOOT;
-
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_HIP] = Skeleton::Joint::RIGHT_HIP;
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_KNEE] = Skeleton::Joint::RIGHT_KNEE;
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_ANKLE] = Skeleton::Joint::RIGHT_ANKLE;
-		obtrackOpenNIEquivalents[XN_SKEL_RIGHT_FOOT] = Skeleton::Joint::RIGHT_FOOT;
-	}
 }
 
 int KinectTracker::init() {
@@ -112,7 +90,7 @@ int KinectTracker::init() {
 
 	if (!userNode.IsCapabilitySupported(XN_CAPABILITY_SKELETON) ||
 			!userNode.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION)) {
-		return -1; //TODO: Ability to work without these
+		return -1; //TODO: Ability to work without these (i.e. blobs only)
 	}
 
 	// try to detect all joints
@@ -165,100 +143,103 @@ void KinectTracker::updateSkeleton() {
 	xn::SkeletonCapability cap = userNode.GetSkeletonCap();
 	cap.EnumerateActiveJoints(openNIJoints, numJoints);
 	std::map<Skeleton::Joint, JointInfo>& joints = skel._getJointMap();
-	joints.clear(); // nuke the map from orbit. It's not the only way to be sure, nor the most 
-	// efficient thing to do, but it's easier than finding out which joints have 
-	// become inactive and deleting just those.
+	std::map<Skeleton::Joint, JointInfo>& joints2D = skel2D._getJointMap();
+	/*	Nuke the maps from orbit. It's not the only way to be sure, and probably not 
+		the most efficient thing to do, but it's easier than finding out which joints 
+		have become inactive and deleting just those. */
+	joints.clear(); 
+	joints2D.clear();
 	for(int i = 0; i < numJoints; i++) {
 		XnSkeletonJointTransformation jointTransform;
 		cap.GetSkeletonJoint(skelUser, openNIJoints[i], jointTransform);
-		const XnVector3D& openNIPosition = jointTransform.position.position;
+
+		XnVector3D& openNIPosition = jointTransform.position.position;
 		const cv::Point3f position(openNIPosition.X, openNIPosition.Y, openNIPosition.Z);
+		depthNode.ConvertRealWorldToProjective(1, &openNIPosition, &openNIPosition);
+		const cv::Point3f pos2D(openNIPosition.X, openNIPosition.Y, 0.0f);		
 		const float posConfidence = jointTransform.position.fConfidence;
+		
 		const XnFloat* openNIRotation = jointTransform.orientation.orientation.elements;
 		cv::Mat rotation(3, 3, CV_32FC1);
-
 		// Both the OpenNI and the OpenCV matrices are stored in row-major order, so the
 		// following works out nicely
 		memcpy(rotation.data, openNIRotation, 9*sizeof(float)); 
 		const float rotConfidence = jointTransform.orientation.fConfidence;
 
-		joints.insert(
-			std::make_pair(obtrackOpenNIEquivalents[openNIJoints[i]],
-				JointInfo(position, posConfidence, rotation, rotConfidence))
-			);
+		/* Skeleton joints were taken from OpenNI, but OpenNI's start at 1, 
+			while libobtrack's start at the C++ default of 0, hence the -1.
+		*/
+		const Skeleton::Joint curJoint = static_cast<Skeleton::Joint>(openNIJoints[i] - 1);
+		joints.insert(std::make_pair(curJoint, 
+			JointInfo(position, posConfidence, rotation, rotConfidence)));
+		// TODO: Convert the rotations to 2D and pass them on
+		joints2D.insert(std::make_pair(curJoint,
+			JointInfo(pos2D, posConfidence, cv::Mat(), 0.0f)));
 	}
 }
 
 /*! This version of feed is peculiar, in that it ignores the
-	provided image. \ref(Tracker::feed)
+	provided image.
 
 	\param img This parameter is ignored.
 	\sa Tracker::feed
 */
 int KinectTracker::feed(const cv::Mat& img) {
-	int numUsers = userNode.GetNumberOfUsers();	
+	XnUInt16 numUsers = userNode.GetNumberOfUsers();	
 	if(numUsers == 0) {
 		users.clear();
 		return 0;
 	}
 
-	users.reserve(numUsers);
-	for(int i = 0; i < users.size(); i++)
-		users[i].clear();
-	while(numUsers < users.size())
+	std::vector<XnUserID> userIDs(numUsers);
+	userIDs.resize(numUsers);
+	userNode.GetUsers(userIDs.data(), numUsers);
+
+	XnUserID maxUserID = *std::max_element(userIDs.begin(), userIDs.end());
+
+	users.reserve(maxUserID);
+	while(maxUserID < users.size())
 		users.pop_back();
-	while(numUsers > users.size())
+	for(size_t i = 0; i < users.size(); i++)
+		users[i].clear();
+	while(maxUserID > users.size())
 		users.push_back(Blob());
-
-
-	/*bool* wasUserFound = new bool[numUsers]; // whether the user was found in the frame
-	// remember that the user is only lost after she's out of the frame
-	// for 10 seconds
-	for(int i = 0; i < numUsers; i++)
-		wasUserFound[i] = false;*/
-
+	
 	xn::SceneMetaData smd;
 	userNode.GetUserPixels(0, smd);
-	int maxX = smd.XRes();
-	int maxY = smd.YRes();
+	unsigned int maxX = smd.XRes();
+	unsigned int maxY = smd.YRes();
 	
-	const XnLabel* labels = smd.Data();
-	
-	for(int x = 0; x < maxX; x++) {
-		for(int y = 0; y < maxY; y++) {
+	const XnLabel* labels = smd.Data();	
+	for(size_t x = 0; x < maxX; x++) {
+		for(size_t y = 0; y < maxY; y++) {
 			int userInThisPixel = labels[y * maxX + x];
-			if(userInThisPixel != 0) {				
-				//wasUserFound[userInThisPixel - 1] = true;
-
-				// - 1, since users start at 1 and the array starts at 0
+			if(userInThisPixel != 0)				
 				users[userInThisPixel - 1].addPoint(x, y);
-			}			
 		}
 	}
 
 	if(skelUser != 0)
 		updateSkeleton();
 
-	/* // What to do about off-camera users? For now, ignore them.
-	for(int i = 0; i < numUsers; i++) {
-		if(!wasUserFound[i]) {
-			XnPoint3D com;
-			userNode.GetCoM(i + 1, com);
-			// The user's position is (0, 0, 0) while she's off-camera, so this
-			// would be pointless... maybe do something else here?
-			users[i + 1].addPoint(com.X, com.Y);
-			
-		}			
-	}
-
-	delete[] wasUserFound;*/
-
 	return numUsers;
 }
 
 void KinectTracker::objectShapes(std::vector<const Shape*>& shapes) const {
-	for(int i = 0; i < users.size(); i++) {
-		shapes.push_back(&(users[i]));
+	for(size_t i = 0; i < users.size(); i++) {
+		if(skelUser > 0 && i == skelUser - 1)
+			shapes.push_back(&userSkelAlternative);
+		else
+			shapes.push_back(&(users[i]));
+	}
+}
+
+void KinectTracker::objectShapes2D(std::vector<const Shape*>& shapes, int forImage) const {
+	for(size_t i = 0; i < users.size(); i++) {
+		if(skelUser > 0 && i == skelUser - 1)
+			shapes.push_back(&user2DSkelAlternative);
+		else
+			shapes.push_back(&(users[i]));
 	}
 }
 

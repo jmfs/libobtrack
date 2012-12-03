@@ -1,4 +1,5 @@
 #include "Blob.h"
+#include "helpers.h"
 #include <algorithm>
 #include <limits>
 #include <list>
@@ -9,18 +10,12 @@ namespace obt {
 const int Blob::DEFAULT_CAPACITY = 100;
 
 Blob::Blob(int capacity):
-		pixels(capacity),
-		cachedCentroid(NULL),
-		cachedRR(cv::Point2f(), cv::Size2f(-1, -1), 0.0f),
-		minX(std::numeric_limits<int>::min()) {
+		pixels(capacity) {
+	minX = minY = std::numeric_limits<int>::max();
+	maxX = maxY = std::numeric_limits<int>::min();
 }
 
-
-
-cv::Point2f Blob::centroid() const {
-	if(cachedCentroid)
-		return *cachedCentroid;
-
+cv::Point3f Blob::centroid() const {
 	long long xSum = 0;
 	long long ySum = 0;
 	Pixels::const_iterator i = pixels.begin();
@@ -32,56 +27,39 @@ cv::Point2f Blob::centroid() const {
 
 	float centroidX = xSum / static_cast<float>(size);
 	float centroidY = ySum / static_cast<float>(size);
-
-	cachedCentroid = new cv::Point2f(centroidX, centroidY);
-	return *cachedCentroid;
+		
+	return cv::Point3f(centroidX, centroidY, 0.0f);
 }
 
 cv::Rect Blob::boundingRect() const {
+	if(pixels.empty())
+		return INVALID_RECT;
+
 	return cv::Rect(minX, minY, maxX - minX, maxY - minY);
 }
 
 // This runs _really_ slowly, for some reason. Most of the time
 // is spent at cv::AutoBuffer::AutoBuffer .
 cv::RotatedRect Blob::boundingRotatedRect() const {
-	if(cachedRR.size.width == -1 && !pixels.empty()) {
-		cachedRR = cv::minAreaRect(cv::Mat(pixels, false));
-	}
+	if(pixels.empty())
+		return INVALID_ROTATED_RECT;
 
-	return cachedRR;
+	return cv::minAreaRect(cv::Mat(pixels, false));
 }
 
 void Blob::addPoint(int x, int y) {
-	if(cachedCentroid) {
-		delete cachedCentroid;
-		cachedCentroid = NULL;
-	}	
-	cachedRR.size.width = -1; // Invalidate the cached RotatedRect
-
-	if(pixels.empty()) {
-		maxX = x;
-		minX = x;
-		maxY = y;
-		minY = y;
-	}
-	else {
-		maxX = std::max(x, maxX);
-		minX = std::min(x, minX);
-		maxY = std::max(y, maxY);
-		minY = std::min(y, minY);
-	}
-
+	maxX = std::max(x, maxX);
+	minX = std::min(x, minX);
+	maxY = std::max(y, maxY);
+	minY = std::min(y, minY);
+	
 	pixels.push_back(cv::Point(x, y));	
 }
 
 void Blob::clear() {
-	if(cachedCentroid) {
-		delete cachedCentroid;
-		cachedCentroid = NULL;
-	}
-	minX = minY = std::numeric_limits<int>::min();
-	maxX = maxY = std::numeric_limits<int>::max();
-	cachedRR.size.width = -1;
+	minX = minY = std::numeric_limits<int>::max();
+	maxX = maxY = std::numeric_limits<int>::min();
+	pixels.clear();
 }
 
 void Blob::getPixels(std::vector<cv::Point>& result) const {

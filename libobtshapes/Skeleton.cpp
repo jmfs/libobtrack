@@ -1,11 +1,18 @@
 #include "Skeleton.h"
+#include "helpers.h"
 
 namespace obt {
 
-//const int Skeleton::MAX_JOINTS = 24;
+Skeleton::Skeleton(bool is3D):
+		_is3D(is3D) {
+}
 
-Skeleton::Skeleton(TransformationCallback cb):
-		toVideoCoordinates(cb) {	
+bool Skeleton::isSkeleton() const {
+	return true;
+}
+
+bool Skeleton::is3D() const {
+	return _is3D;
 }
 	
 /*! Adds the currently active joints to out. out is cleared before this operation. */
@@ -43,7 +50,8 @@ const JointInfo* Skeleton::getJointInfo(Joint j) const {
 	*avg will be (FLOAT_MAX, FLOAT_MAX, FLOAT_MAX), *min will be greater than *max, and *points will
 	be empty.
 */
-void Skeleton::getJointPositionsAndStats(std::vector<cv::Point3f>* points, 
+void Skeleton::getJointPositionsAndStats(
+		std::vector<cv::Point3f>* points,  std::vector<cv::Point2f>* points2D, 
 		cv::Point3f* min, cv::Point3f* max, cv::Point3f* avg) const {
 	if(points != NULL && min != NULL && max != NULL && avg != NULL)
 		return;
@@ -54,6 +62,8 @@ void Skeleton::getJointPositionsAndStats(std::vector<cv::Point3f>* points,
 	int numJoints = 0;
 	if(points != NULL)
 		points->clear();
+	if(points2D != NULL)
+		points2D->clear();
 	if(min != NULL)
 		min->x = min->y = min->z = std::numeric_limits<float>::max();
 	if(max != NULL)
@@ -67,6 +77,9 @@ void Skeleton::getJointPositionsAndStats(std::vector<cv::Point3f>* points,
 		cv::Point3f pos = it->second.position();
 		if(points != NULL) {
 			points->push_back(pos);
+		}
+		if(points2D != NULL) {
+			points2D->push_back(cv::Point2f(pos.x, pos.y));
 		}
 		if(min != NULL) {
 			min->x = std::min(min->x, pos.x);
@@ -88,31 +101,18 @@ void Skeleton::getJointPositionsAndStats(std::vector<cv::Point3f>* points,
 
 	if(avg != NULL) {
 		if(numJoints == 0) {
-			avg->x = avg->y = avg->z = std::numeric_limits<float>::max();
+			*avg = INVALID_POINT_3D;
 		}
 		else {		
-			avg->x = xAccum / numJoints;
-			avg->y = yAccum / numJoints;
-			avg->z = zAccum / numJoints;
+			avg->x = static_cast<float>(xAccum / numJoints);
+			avg->y = static_cast<float>(yAccum / numJoints);
+			avg->z = static_cast<float>(zAccum / numJoints);
 		}
 	}
 }
 
 
-/*! Returns the skeleton's centroid's 2D position.
-	If \ref Skeleton::toVideoCoordinates is not NULL,
-	it is used to transform the 3D into 2D coordinates.
-	For more info, see \ref Skeleton::centroid3D.
-*/
-cv::Point2f Skeleton::centroid() const {
-	cv::Point3f c3d = centroid3D();
-	if(toVideoCoordinates != NULL)
-		return toVideoCoordinates(c3d);
-	else
-		return cv::Point2f(c3d.x, c3d.y);
-}
-
-/*! Returns the skeleton's centroid's 3D position.
+/*! Returns the skeleton's centroid's position.
 	Defining a skeleton's centroid is problematic. In this case,
 	it is taken as being:
 	a) The torso center, if that joint is active.
@@ -123,7 +123,7 @@ cv::Point2f Skeleton::centroid() const {
 	Note that only joints with at least 50%	confidence in their position 
 	are used for these calculations.
 */
-cv::Point3f Skeleton::centroid3D() const {
+cv::Point3f Skeleton::centroid() const {
 	const JointInfo* torso = getJointInfo(TORSO);
 	if(torso != NULL && torso->positionConfidence() >= 0.5)
 		return torso->position();
@@ -150,15 +150,15 @@ cv::Point3f Skeleton::centroid3D() const {
 	}
 
 	cv::Point3f result;
-	getJointPositionsAndStats(NULL, NULL, NULL, &result);
+	getJointPositionsAndStats(NULL, NULL, NULL, NULL, &result);
 	return result;
 }
 
-/*! Transforms the points in points3D, calling toVideoCoordinates on each one,
+/* Transforms the points in points3D, calling toVideoCoordinates on each one,
 	and gets puts the resulting points in points2D, the minimum coordinates on min,
 	and the maximum on max. If points2D, min, or max are NULL, they are ignored.
 */
-void Skeleton::transformJointPositionsAndGetStats(
+/*void Skeleton::transformJointPositionsAndGetStats(
 		const std::vector<cv::Point3f>& points3D,
 		std::vector<cv::Point2f>* points2D, 
 		cv::Point2f* min, cv::Point2f* max) const {
@@ -171,7 +171,7 @@ void Skeleton::transformJointPositionsAndGetStats(
 	if(max != NULL)
 		max->x = max->y = std::numeric_limits<float>::min();
 	
-	for(int i = 0; i < points3D.size(); i++) {
+	for(unsigned int i = 0; i < points3D.size(); i++) {
 		cv::Point2f pos2D = toVideoCoordinates(points3D[i]);
 		if(points2D != NULL)
 			points2D->push_back(pos2D);
@@ -185,58 +185,42 @@ void Skeleton::transformJointPositionsAndGetStats(
 			max->y = std::max(max->y, pos2D.y);
 		}
 	}
-}
+}*/
 
 /*! Gets a bounding rectangle for all active joints with greater than 50% confidence
 	in their position. If no such joints exist, returns cv::Rect(INT_MAX, INT_MAX, 0, 0).
 */
 cv::Rect Skeleton::boundingRect() const {
-	cv::Point3f min, max;
-	std::vector<cv::Point3f> pointVector;
-	std::vector<cv::Point3f>* points;
-	if(toVideoCoordinates != NULL)
-		points = &pointVector;
-	else
-		points = NULL;
-	getJointPositionsAndStats(points, &min, &max, NULL);
-	if(min.x > max.x) { // no joints with > 0.5 confidence were found
-		return cv::Rect(INT_MAX, INT_MAX, 0, 0);
-	}
-	if(toVideoCoordinates == NULL)
-		return cv::Rect(min.x, min.y, max.x - min.x, max.y - min.y);
-	else {
-		cv::Point2f min2D;
-		cv::Point2f max2D;
+	if(_is3D)
+		return INVALID_RECT;
 
-		transformJointPositionsAndGetStats(pointVector, NULL, &min2D, &max2D);
-		
-		return cv::Rect(min2D, max2D);
-	}
+	cv::Point3f min, max;
+	getJointPositionsAndStats(NULL, NULL, &min, &max, NULL);
+	if(min.x > max.x) // no joints with >= 0.5 confidence were found
+		return INVALID_RECT;
+	// Make sure the rectangle always contains both points
+	return cv::Rect(
+		static_cast<int>(std::floor(min.x)), 
+		static_cast<int>(std::floor(min.y)), 
+		static_cast<int>(std::ceil(max.x - min.x)), 
+		static_cast<int>(std::ceil(max.y - min.y)));
 }
 
 /*! Gets the smallest (not necessarily axis-aligned) rectangle containing all active joints with 
 	greater than 50% confidence	in their position. If no such joints exist, 
-	returns cv::RotatedRectRect(cv::Point2f(std::numeric_limits<float>::max(),
-	std::numeric_limits<float>::max()), cv::Size2f(0, 0), 0).
+	returns INVALID_ROTATED_RECT.
 */
 cv::RotatedRect Skeleton::boundingRotatedRect() const {
-	std::vector<cv::Point3f> pointVector;
-	std::vector<cv::Point3f>* points;
-	if(toVideoCoordinates != NULL)
-		points = &pointVector;
-	else
-		points = NULL;
-	getJointPositionsAndStats(points, NULL, NULL, NULL);
-	if(pointVector.empty()) {
-		const float FLOAT_MAX = std::numeric_limits<float>::max();
-		return cv::RotatedRect(
-			cv::Point2f(FLOAT_MAX, FLOAT_MAX), cv::Size2f(0, 0), 0);
-	}
+	if(_is3D)
+		return INVALID_ROTATED_RECT;
 
-	std::vector<cv::Point2f> points2D;
-	transformJointPositionsAndGetStats(pointVector, &points2D, NULL, NULL);
+	std::vector<cv::Point2f> points;
+	
+	getJointPositionsAndStats(NULL, &points, NULL, NULL, NULL);
+	if(points.empty())
+		return INVALID_ROTATED_RECT;
 
-	return cv::minAreaRect(cv::Mat(points2D, false));
+	return cv::minAreaRect(cv::Mat(points, false));
 }
 
 void Skeleton::getPixels(std::vector<cv::Point>& result) const {
@@ -247,8 +231,32 @@ void Skeleton::getPixels(std::vector<cv::Point>& result) const {
 	This shouldn't be used outside of a \ref Tracker.
 	Use \ref Skeleton::getAllActiveJoints instead.
 */
-std::map<Skeleton::Joint, Skeleton::JointInfo>& _getJointMap() {
+std::map<Skeleton::Joint, JointInfo>& Skeleton::_getJointMap() {
 	return joints;
+}
+
+JointInfo::JointInfo(const cv::Point3f& position, float positionConfidence, 
+			const cv::Mat& orientation, float orientationConfidence):
+		pos(position),
+		posConfidence(positionConfidence),
+		rot(orientation),
+		rotConfidence(orientationConfidence) {
+}
+
+const cv::Point3f& JointInfo::position() const {
+	return pos;
+}
+
+float JointInfo::positionConfidence() const {
+	return posConfidence;
+}
+
+const cv::Mat& JointInfo::orientation() const {
+	return rot;
+}
+
+float JointInfo::orientationConfidence() const {
+	return rotConfidence;
 }
 
 }

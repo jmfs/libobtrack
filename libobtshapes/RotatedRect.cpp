@@ -31,8 +31,8 @@ void RotatedRect::points(cv::Point2f pts[]) const {
 	cv::RotatedRect::points(pts);
 }
 
-cv::Point2f RotatedRect::centroid() const {
-	return center; 
+cv::Point3f RotatedRect::centroid() const {
+	return cv::Point3f(center); 
 }
 
 cv::Rect RotatedRect::boundingRect() const {
@@ -44,7 +44,7 @@ cv::RotatedRect RotatedRect::boundingRotatedRect() const {
 }
 
 void RotatedRect::getPixels(std::vector<cv::Point>& result) const {
-	//TODO: complete
+	//TODO: stub
 	std::cerr << "obt::RotatedRect::getPixels: Not implemented, yet" << std::endl;
 	assert(false);
 	/*cv::Rect bb = boundingRect();

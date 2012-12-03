@@ -4,6 +4,7 @@
 #include "Tracker.h"
 #include "Blob.h"
 #include "Skeleton.h"
+#include "ShapeAlternatives.h"
 
 #include <XnCppWrapper.h>
 #include <map>
@@ -21,6 +22,7 @@ public:
 	virtual int feed(const cv::Mat& img);
 
 	virtual void objectShapes(std::vector<const Shape*>& shapes) const;
+	virtual void objectShapes2D(std::vector<const Shape*>& shapes, int forImage = 0) const;
 
 	~KinectTracker();
 
@@ -31,12 +33,6 @@ private:
 	static void XN_CALLBACK_TYPE CalibrationStarted(xn::SkeletonCapability& skeleton, XnUserID user, void* instance);
 	static void XN_CALLBACK_TYPE CalibrationEnded(xn::SkeletonCapability& skeleton, XnUserID user, XnBool bSuccess, void* instance);
 
-	/*! Conversion from OpenNI skeleton joints to obtrack skeleton joints.
-		Its size is MAX_JOINTS + 1, since, as of 2011-05-25, 
-		OpenNI's enum starts at 1, while libobtrack's starts at the C++ default of 0
-	*/
-	static int obtrackOpenNIEquivalents[Skeleton::MAX_JOINTS + 1];
-	
 	void updateSkeleton();
 
 	/* Whether this tracker manages the OpenNI context's lifecycle.
@@ -64,7 +60,8 @@ private:
 		detect and track one skeleton (at least using OpenNI, as of 2011-09-05),
 		so only one is saved.
 	*/
-	Skeleton skel;
+	Skeleton skel, skel2D;
+	ShapeAlternatives userSkelAlternative, user2DSkelAlternative;
 
 	int skelUser;		//! Which user the saved skeleton belongs to, or 0 if none
 };
