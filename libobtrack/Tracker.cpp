@@ -83,6 +83,14 @@ bool Tracker::needsHint() const {
 	return _needsHint;
 }
 
+bool Tracker::isTrained() const {
+	return trained;
+}
+
+bool Tracker::isStarted() const {
+	return started;
+}
+
 
 /*! Appends 2D versions of the shapes found to a vector. This is the 2D rendition
 	from image number forImage. The shapes must be in the same order as the ones in

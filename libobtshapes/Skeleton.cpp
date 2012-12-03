@@ -26,7 +26,7 @@ void Skeleton::activeJoints(std::vector<Joint>& out) const {
 		it++;
 	}
 }
-
+	
 const std::map<Skeleton::Joint, JointInfo>& Skeleton::getAllActiveJoints() const {
 	return joints;
 }
@@ -49,7 +49,7 @@ const JointInfo* Skeleton::getJointInfo(Joint j) const {
 	the caller is not interested in them.
 	and only joints for which the confidence is greater than 50% are considered.
 	If no joints meeting said criteria are found, the following things symbolize the error:
-	*avg will be (FLOAT_MAX, FLOAT_MAX, FLOAT_MAX), *min will be greater than *max, and *points will
+	*avg will equal INVALID_POINT_3D, *min will be greater than *max, and *points will
 	be empty.
 */
 void Skeleton::getJointPositionsAndStats(
