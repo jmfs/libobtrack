@@ -1,0 +1,73 @@
+#include "RotatedRect.h"
+
+namespace obt {
+
+RotatedRect::RotatedRect():
+		cv::RotatedRect() {
+}
+
+RotatedRect::RotatedRect(const cv::Point2f& center, const cv::Size2f& size, float angle):
+		cv::RotatedRect(center, size, angle) {
+}
+
+RotatedRect::RotatedRect(const CvBox2D& box):
+		cv::RotatedRect(center, size, angle) {
+}
+
+RotatedRect::RotatedRect(const cv::RotatedRect cvRotRect):
+	cv::RotatedRect(cvRotRect) {
+}
+
+RotatedRect::operator cv::RotatedRect() const {
+	return cv::RotatedRect(*this);
+}
+
+RotatedRect::operator CvBox2D() const {
+	return cv::RotatedRect::operator CvBox2D();
+}
+
+void RotatedRect::points(cv::Point2f pts[]) const {
+	cv::RotatedRect::points(pts);
+}
+
+cv::Point2f RotatedRect::centroid() const {
+	return center; 
+	// this is OK, since OpenCV rounds, rather than truncates float to integer point conversions.
+	// The only possible problem... is the sub-pixel precision actually needed?
+}
+
+cv::Rect RotatedRect::boundingRect() const {
+	return cv::RotatedRect::boundingRect();
+}
+
+void RotatedRect::getPixels(std::vector<cv::Point>& result) const {
+	//TODO: complete
+	assert(false);
+	cv::Rect bb = boundingRect();
+	
+	cv::Point2f corners[4];
+	points(corners);
+
+	float m[4], b[4];	// The m and b in the line equation y = mx + b,
+						// m being the slope and b the y-intercept.
+						// One for each side.
+
+	for(int i = 0; i < 4; i++) {
+		int nextPoint = (i + 1) % 4;
+		m[i] = (corners[nextPoint].y - corners[i].y) / 
+			(corners[nextPoint].x - corners[i].x);
+		
+		cv::Point2f vec(corners[nextPoint] - corners[i]);
+		b[i] = corners[nextPoint].y - corners[nextPoint].x * vec.y / vec.x ;
+		// From the vectorial line equation, (x, y) = (x0, y0) + k(vx, vy),
+		// for x = 0
+	}
+
+
+	for(int y = bb.y; y < bb.y + bb.height; y++) {
+
+
+	}
+}
+
+}
