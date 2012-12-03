@@ -51,7 +51,10 @@ private:
 	/*! In order to be matched in the next frame, a point's movement must differ from 
 		the movement average less than STD_DEV_MULTIPLIER times the movement standard deviation.
 	*/
-	static const int STD_DEV_MULTIPLIER = 1; 
+	static const int STD_DEV_MULTIPLIER = 1;
+
+	void sanityCheck();
+
 	cv::Mat defaultMask; //! Default point detection mask
 	
 	cv::Ptr<cv::FeatureDetector> detector; //! Feature point detector to use. See \ref FASTrack() for defaults.

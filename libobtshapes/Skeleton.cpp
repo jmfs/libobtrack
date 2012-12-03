@@ -156,39 +156,6 @@ cv::Point3f Skeleton::centroid() const {
 	return result;
 }
 
-/* Transforms the points in points3D, calling toVideoCoordinates on each one,
-	and gets puts the resulting points in points2D, the minimum coordinates on min,
-	and the maximum on max. If points2D, min, or max are NULL, they are ignored.
-*/
-/*void Skeleton::transformJointPositionsAndGetStats(
-		const std::vector<cv::Point3f>& points3D,
-		std::vector<cv::Point2f>* points2D, 
-		cv::Point2f* min, cv::Point2f* max) const {
-	assert(toVideoCoordinates != NULL && !points3D.empty());
-	
-	if(points2D != NULL)
-		points2D->clear();
-	if(min != NULL)
-		min->x = min->y = std::numeric_limits<float>::max();
-	if(max != NULL)
-		max->x = max->y = std::numeric_limits<float>::min();
-	
-	for(unsigned int i = 0; i < points3D.size(); i++) {
-		cv::Point2f pos2D = toVideoCoordinates(points3D[i]);
-		if(points2D != NULL)
-			points2D->push_back(pos2D);
-
-		if(min != NULL) {
-			min->x = std::min(min->x, pos2D.x);
-			min->y = std::min(min->y, pos2D.y);
-		}
-		if(max != NULL) {
-			max->x = std::max(max->x, pos2D.x);
-			max->y = std::max(max->y, pos2D.y);
-		}
-	}
-}*/
-
 /*! Gets a bounding rectangle for all active joints with greater than 50% confidence
 	in their position. If no such joints exist, returns cv::Rect(INT_MAX, INT_MAX, 0, 0).
 */

@@ -7,7 +7,6 @@
 #include <fstream>
 
 static std::ostream& logger = std::ofstream("log.txt", ios::out);
-//std::ostream& logger = std::cout;
 
 namespace obt {
 
@@ -36,12 +35,6 @@ FASTrack::FASTrack(cv::Ptr<cv::FeatureDetector> featureDetector,
 
 
 int FASTrack::start(const TrainingInfo* ti, int idx) {
-	/*if(mask.rows != img.rows || mask.cols != img.cols || started) {
-		std::cerr << "ERROR: Can't detect objects. Training images";
-		return -1;
-	}*/
-	/*cv::Mat gray;
-	cv::cvtColor(img, gray, CV_RGB2GRAY);*/
 	bool validImage = ti != NULL && ((!started && ti->img.rows > 0 && ti->img.cols > 0) || 
 		(started && ti->img.rows == defaultMask.rows && ti->img.cols == defaultMask.cols));
 
@@ -49,15 +42,7 @@ int FASTrack::start(const TrainingInfo* ti, int idx) {
 		return NO_HINT;
 	}
 
-	assert(masks.size() == prevMaskRects.size() && 
-			masks.size() == keyPoints[0].size() && 
-			masks.size() == keyPoints[1].size() && 
-			masks.size() == descriptors[0].size() &&
-			masks.size() == descriptors[1].size() && 
-			masks.size() == HPrevs.size() && 
-			masks.size() == keyPointShapes.size() && 
-			masks.size() == latestMatches.size()
-	);
+	sanityCheck();
 
 	if(idx > static_cast<int>(masks.size())) {
 		std::cerr << "WARNING: FASTrack::start: idx is greater than the number of currently tracked objects." 
@@ -172,15 +157,7 @@ int FASTrack::feed(const cv::Mat& img) {
 		return NO_HINT;
 
 	assert(img.rows == defaultMask.rows && img.cols == defaultMask.cols);
-	assert(masks.size() == prevMaskRects.size() && 
-			masks.size() == keyPoints[0].size() && 
-			masks.size() == keyPoints[1].size() && 
-			masks.size() == descriptors[0].size() &&
-			masks.size() == descriptors[1].size() && 
-			masks.size() == HPrevs.size() && 
-			masks.size() == keyPointShapes.size() && 
-			masks.size() == latestMatches.size()
-	);
+	sanityCheck();
 	
 	curDescIndex = 1 - curDescIndex;
 	keyPointShapes.clear();
@@ -213,15 +190,11 @@ int FASTrack::feed(const cv::Mat& img) {
 		cv::Rect bounding = prevMaskRect = getNewMaskRect(kps, prevMaskRect);
 		cv::rectangle(mask, bounding, cv::Scalar::all(1));
 	
-		/*cv::Mat gray;
-		cv::cvtColor(img, gray, CV_RGB2GRAY);*/
 		cv::Mat scaledImg;
 		if(scaleX == 1.0f && scaleY == 1.0f)
 			scaledImg = img;
 		else
 			cv::resize(img, scaledImg, cv::Size(), scaleX, scaleY);
-
-		//cv::medianBlur(scaledImg, scaledImg, 3);
 
 		// Testing shows that the keypoint vector and descriptor matrix
 		// are cleared before any new stuff is added to them.
@@ -363,16 +336,7 @@ void FASTrack::points2keypoints(const std::vector<cv::Point2f>& in, std::vector<
 }
 
 void FASTrack::stopTrackingSingleObject(size_t idx) {
-	assert(masks.size() == prevMaskRects.size() && 
-			masks.size() == keyPoints[0].size() && 
-			masks.size() == keyPoints[1].size() && 
-			masks.size() == descriptors[0].size() &&
-			masks.size() == descriptors[1].size() && 
-			masks.size() == HPrevs.size() && 
-			masks.size() == keyPointShapes.size() && 
-			masks.size() == latestMatches.size() && 
-			idx >= 0 && idx < masks.size()
-	);
+	sanityCheck();
 
 	if(masks.size() == 1) {
 		stopTracking();
@@ -389,15 +353,7 @@ void FASTrack::stopTrackingSingleObject(size_t idx) {
 	eraseListElement(keyPointShapes, idx);
 	eraseListElement(latestMatches, idx);
 
-	assert(masks.size() == prevMaskRects.size() && 
-			masks.size() == keyPoints[0].size() && 
-			masks.size() == keyPoints[1].size() && 
-			masks.size() == descriptors[0].size() &&
-			masks.size() == descriptors[1].size() && 
-			masks.size() == HPrevs.size() && 
-			masks.size() == keyPointShapes.size() && 
-			masks.size() == latestMatches.size()
-	);
+	sanityCheck();
 }
 
 void FASTrack::stopTracking() {
@@ -413,6 +369,10 @@ void FASTrack::stopTracking() {
 	defaultMask = cv::Mat();
 	started = false;
 
+	sanityCheck();
+}
+
+void FASTrack::sanityCheck() {
 	assert(masks.size() == prevMaskRects.size() && 
 			masks.size() == keyPoints[0].size() && 
 			masks.size() == keyPoints[1].size() && 

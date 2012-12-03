@@ -206,7 +206,7 @@ int CamShiftTracker::vMax() const {
 /*! Sets the maximum color value. 
 	
 	\param vMax The maximum (exclusive) value. It should be between 1 and 256
-		(inclusively), but will be clamped if it isn't.If the new maximum value is less than the 
+		(inclusively), but will be clamped if it isn't. If the new maximum value is less than the 
 		minimum value, the minimum value is reset to 0.
 */
 void CamShiftTracker::setVMax(int vMax) {

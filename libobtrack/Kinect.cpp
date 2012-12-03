@@ -78,7 +78,8 @@ KinectTracker::KinectTracker(xn::Context& context):
 }
 
 /*! Initializes OpenNI.
-	\return*/
+	\return XN_STATUS_OK if everything went right, -xnStatus (see OpenNI docs) if something went wrong, or -1,
+		if the device doesn't support pose estimation/skeleton detection. */
 int KinectTracker::init() {
 	XnStatus status = context.FindExistingNode(XN_NODE_TYPE_DEPTH, depthNode);
 	if(status != XN_STATUS_OK)

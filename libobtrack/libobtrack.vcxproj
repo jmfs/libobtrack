@@ -334,7 +334,6 @@
     <ClInclude Include="FASTrack.h" />
     <ClInclude Include="Kinect.h" />
     <ClInclude Include="matlab.h" />
-    <ClInclude Include="Object.h" />
     <ClInclude Include="obtrack.h" />
     <ClInclude Include="Tracker.h" />
     <ClInclude Include="TrainingInfo.h" />

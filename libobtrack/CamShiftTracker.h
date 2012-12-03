@@ -40,11 +40,11 @@ public:
 protected:
 	void sanitizeWindow(Rect& rect, int width, int height);
 	
-	/*! Number of histogram bins, minimum saturation, minimum value and maximum value.
-		See constructor for details.
-		\sa CamShiftTracker()
-	*/
-	int _bins, _sMin, _vMin, _vMax;	
+	int _bins; //! Number of histogram bins. See constructor for details. \sa CamShiftTracker()
+	int _sMin; //! Minimum saturation. See constructor for details. \sa CamShiftTracker()
+	int _vMin; //! Minimum value. See constructor for details. \sa CamShiftTracker()
+	int _vMax; //! Maximum value. See constructor for details. \sa CamShiftTracker()
+		
 	std::list<cv::MatND> hists; //! The hue histogram
 	std::list<RotatedRect> shapes; //! Detected shapes
 	std::list<cv::Mat> masks; //! Masks for histogram calculation.

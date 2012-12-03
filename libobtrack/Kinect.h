@@ -34,9 +34,12 @@ public:
 private:	
 	static void XN_CALLBACK_TYPE FoundUser(xn::UserGenerator& generator, XnUserID user, void* instance);
 	static void XN_CALLBACK_TYPE LostUser(xn::UserGenerator& generator, XnUserID user, void* instance);
-	static void XN_CALLBACK_TYPE PoseDetected(xn::PoseDetectionCapability& pose, const XnChar* strPose, XnUserID user, void* instance);
-	static void XN_CALLBACK_TYPE CalibrationStarted(xn::SkeletonCapability& skeleton, XnUserID user, void* instance);
-	static void XN_CALLBACK_TYPE CalibrationEnded(xn::SkeletonCapability& skeleton, XnUserID user, XnBool bSuccess, void* instance);
+	static void XN_CALLBACK_TYPE PoseDetected(
+		xn::PoseDetectionCapability& pose, const XnChar* strPose, XnUserID user, void* instance);
+	static void XN_CALLBACK_TYPE CalibrationStarted(
+		xn::SkeletonCapability& skeleton, XnUserID user, void* instance);
+	static void XN_CALLBACK_TYPE CalibrationEnded(
+		xn::SkeletonCapability& skeleton, XnUserID user, XnBool bSuccess, void* instance);
 
 	void updateSkeleton();
 

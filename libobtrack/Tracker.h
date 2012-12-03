@@ -16,9 +16,12 @@ namespace obt {
 */
 class Tracker {
 public:
+	//! Error codes for the start and feed methods.
 	enum Errors {
-		NO_HINT = -1, //! Returned for a tracker which needs a hint, but doesn't receive one
-		INVALID_DATA = -2, //! Returned in case the data passed is invalid
+		//! Returned for a tracker which needs a hint, but doesn't receive one
+		NO_HINT = -1, 
+		//! Returned in case the data passed is invalid
+		INVALID_DATA = -2, 
 		/*! Returned if further initialization is needed
 		 *	Having a need for it should be avoided whenever possible, in individual trackers.
 		 */
@@ -70,8 +73,6 @@ public:
 		\param shapes Output. The found shapes will be appended to this vector.
 	*/
 	virtual void objectShapes(std::vector<const Shape*>& shapes) const = 0;
-	/*! Appends the shapes 
-	*/
 	virtual void objectShapes2D(std::vector<const Shape*>& shapes, int forImage = 0) const;
 
 protected:
