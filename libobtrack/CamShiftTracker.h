@@ -17,13 +17,13 @@ class CamShiftTracker : public Tracker {
 public:	
 	explicit CamShiftTracker(int bins = 16, int sMin = 32, int vMin = 20, int vMax = 235);
 	
-	virtual bool trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx = -1);	
-	virtual bool trainForSingleObject(const TrainingInfo& ti, int idx = -1);
+	/*virtual bool trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx = -1);	
+	virtual bool trainForSingleObject(const TrainingInfo& ti, int idx = -1);*/
 	
 	virtual void stopTrackingSingleObject(size_t idx);
 	virtual void stopTracking();
 
-	int start(const cv::Mat& img);
+	int start(const TrainingInfo* ti = NULL, int idx = -1);
 	int feed(const cv::Mat& img);
 
 	int bins() const;

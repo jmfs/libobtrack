@@ -18,7 +18,7 @@ FASTrack::FASTrack(cv::Ptr<cv::FeatureDetector> featureDetector,
 			cv::Ptr<cv::DescriptorExtractor> descriptorExtractor,
 			cv::Ptr<cv::DescriptorMatcher> descriptorMatcher, 
 			float scaleX, float scaleY):
-		Tracker(true, true),
+		Tracker(false, true, true),
 		scaleX(scaleX),
 		scaleY(scaleY),
 		detector(featureDetector),
@@ -31,35 +31,30 @@ FASTrack::FASTrack(cv::Ptr<cv::FeatureDetector> featureDetector,
 		HPrev(DEFAULT_H) {
 }
 
-bool FASTrack::trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx) {
-	return trainForSingleObject(ti[0], idx); // No more than 1 TrainingInfo needed for this tracker.
-	// TODO: Log this.
-}
 
-bool FASTrack::trainForSingleObject(const TrainingInfo& ti, int idx) {
-	//TODO: Deal with multiple objects
-	defaultMask = mask = cv::Mat::zeros(ti.img.rows, ti.img.cols, CV_8UC1);
-	if(ti.shapes.empty())
-		return false;
-	prevMaskRect = ti.shapes[0]->boundingRect();
-	cv::rectangle(mask, prevMaskRect, cv::Scalar::all(1));
-	detector->detect(ti.img, *keyPoints, mask);
-	extractor->compute(ti.img, *keyPoints, *descriptors);
-	trained = true;
-	return true;
-}
-
-
-
-int FASTrack::start(const cv::Mat& img) {
+int FASTrack::start(const TrainingInfo* ti, int idx) {
 	/*if(mask.rows != img.rows || mask.cols != img.cols || started) {
 		std::clog << "ERROR: Can't detect objects. Training images";
 		return -1;
 	}*/
 	/*cv::Mat gray;
-	cv::cvtColor(img, gray, CV_RGB2GRAY);*/	
+	cv::cvtColor(img, gray, CV_RGB2GRAY);*/
+	bool validImage = ti != NULL && ((!started && ti->img.rows > 0 && ti->img.cols > 0) || 
+		(started && ti->img.rows == defaultMask.rows && ti->img.cols == defaultMask.cols));
+
+	if(ti == NULL || !validImage || ti->shapes.empty()) {
+		return NO_HINT;
+	}
+	
+	defaultMask = mask = cv::Mat::zeros(ti->img.rows, ti->img.cols, CV_8UC1);
+
+	//TODO: Handle multiple objects and non-negative indexes
+	prevMaskRect = ti->shapes[0]->boundingRect();	
+	cv::rectangle(mask, prevMaskRect, cv::Scalar::all(1));
+	detector->detect(ti->img, *keyPoints, mask);
+	extractor->compute(ti->img, *keyPoints, *descriptors);
 	started = true;
-	return feed(img);
+	return feed(ti->img);
 }
 
 /*! Returns a cv::Rect containing the region over which to draw ones in the 
@@ -128,7 +123,7 @@ void FASTrack::movementStats(cv::Point2d& avg, cv::Point2d& sigma) const{
 }
 
 int FASTrack::feed(const cv::Mat& img) {
-	//TODO: if(!trained)
+	//TODO: Check image size
 	if(!started)
 		started = true;
 

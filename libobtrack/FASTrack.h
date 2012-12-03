@@ -18,10 +18,10 @@ public:
 		cv::Ptr<cv::DescriptorMatcher> descriptorMatcher = cv::DescriptorMatcher::create("BruteForce-Hamming"),
 		float scaleX = 1.0f, float scaleY = 1.0f);
 
-	virtual bool trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx = -1);	
-	virtual bool trainForSingleObject(const TrainingInfo& ti, int idx = -1);
+	/*virtual bool trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx = -1);
+	virtual bool trainForSingleObject(const TrainingInfo& ti, int idx = -1);*/
 
-	virtual int start(const cv::Mat& img);
+	virtual int start(const TrainingInfo* ti = NULL, int idx = -1);
 	virtual int feed(const cv::Mat& img);
 
 	//virtual void stopTracking();

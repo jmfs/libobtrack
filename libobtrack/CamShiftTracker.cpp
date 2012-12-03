@@ -27,7 +27,7 @@ namespace obt {
 	This is needed, since whitish colors have ambiguous hues at high values.
 */
 CamShiftTracker::CamShiftTracker(int bins, int sMin, int vMin, int vMax):
-		Tracker(true, true),
+		Tracker(false, true, true),
 		_bins(bins),
 		_sMin(sMin),
 		_vMin(std::min(vMin, vMax)),
@@ -52,7 +52,10 @@ bool CamShiftTracker::trainForSingleObject(const std::vector<TrainingInfo>& ti, 
 	return trainForSingleObject(ti[0], idx);
 }
 
-bool CamShiftTracker::trainForSingleObject(const TrainingInfo& ti, int idx) {
+
+
+
+int CamShiftTracker::start(const TrainingInfo* ti = NULL, int idx = -1) {
 	assert(shapes.size() == masks.size() && masks.size() == hists.size());
 
 	if(ti.shapes.empty()) {
@@ -107,12 +110,7 @@ bool CamShiftTracker::trainForSingleObject(const TrainingInfo& ti, int idx) {
 
 	trained = true;
 
-	return true;
-}
-
-
-int CamShiftTracker::start(const cv::Mat& img) {
-	return feed(img);
+	return ;
 }
 
 int CamShiftTracker::feed(const cv::Mat& img) {

@@ -2,37 +2,36 @@
 
 namespace obt {
 
-Tracker::Tracker(bool needsTraining, bool singleObject):
-		TrackerBase(needsTraining),
+Tracker::Tracker(bool needsTraining, bool needsHint, bool singleObject):
+		_needsTraining(needsTraining),
+		_needsHint(needsHint),
+		trained(false),
+		started(false),
 		singleObject(singleObject) {
 }
 
 /*! Trains an object tracker, according to sample images, or
 	known image/objects pairs. If a tracker needs training, it should
-	always overload this function. In single-object trackers, always calls
-	trainForSingleObject(ti).
+	always overload this function.
 
 	\param ti A vector of images, or (image, object) pairs.
 
 	\return Whether the training has been successful. 
 		If the method hasn't been overriden, always returns true.
-
-	\sa Tracker::trainForSingleObject()
 */
 bool Tracker::train(const std::vector<TrainingInfo>& ti) {
-	if(singleObject)
-		return trainForSingleObject(ti);
+	/*if(singleObject)
+		return trainForSingleObject(ti);*/
 
 	trained = true;
 	return true;
 }
 
 /*! Trains an object tracker, according to a single sample image, or
-	known (image, object) pair. If a tracker needs training, it should
-	always overload this function. In single object trackers, always calls
-	trainForSingleObject(ti).
+	known (image, shapes) pair. If a tracker needs training, it should
+	always overload this function.
 
-	\param ti An image, or (image, object) pair
+	\param ti An image, or (image, shapes) pair
 
 	\return Whether the training has been successful. 
 		If the method hasn't been overriden, always returns true.
@@ -40,8 +39,8 @@ bool Tracker::train(const std::vector<TrainingInfo>& ti) {
 	\sa Tracker::trainForSingleObject()
 */
 bool Tracker::train(const TrainingInfo& ti) {
-	if(singleObject)
-		return trainForSingleObject(ti);
+	/*if(singleObject)
+		return trainForSingleObject(ti);*/
 
 	trained = true;
 	return true;
@@ -61,7 +60,7 @@ bool Tracker::train(const TrainingInfo& ti) {
 		If the method hasn't been overriden, always returns true.
 	
 	\sa objectShapes()
-*/
+/
 bool Tracker::trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx) {
 	trained = true;
 	return true;
@@ -81,11 +80,11 @@ bool Tracker::trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx)
 		If the method hasn't been overriden, always returns true.
 	
 	\sa objectShapes()
-*/
+/
 bool Tracker::trainForSingleObject(const TrainingInfo& ti, int idx) {
 	trained = true;
 	return true;
-}
+}*/
 
 /*! Stops tracking a single object, deleting its training data.
 		
@@ -105,9 +104,20 @@ void Tracker::stopTracking() {
 	started = false;
 }
 
-bool Tracker::isSingleObjectTracker() {
+bool Tracker::isSingleObjectTracker() const {
 	return singleObject;
 }
-		
+
+bool Tracker::needsTraining() const {
+	return _needsTraining;
+}
+
+bool Tracker::isTrained() const {
+	return trained;
+}
+
+bool Tracker::isStarted() const {
+	return started;
+}
 
 }

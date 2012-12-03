@@ -36,7 +36,8 @@ public:
 	// TODO: is saving the object's appearance here needed or possible?
 	
 protected:
-	std::auto_ptr<Shape> _shape;
+	/*ShapeModel shape;
+	AppearanceModel appearance;*/
 };
 
 }

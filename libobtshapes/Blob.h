@@ -12,7 +12,8 @@ class RotatedRect;
 
 class Blob : public Shape {
 	typedef std::vector<cv::Point> Pixels;
-	
+
+public:
 	explicit Blob(int capacity = 100);
 
 	cv::Point2f centroid() const;
