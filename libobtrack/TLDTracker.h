@@ -2,9 +2,12 @@
 #define _OBTRACK_TLD_TRACKER_H
 
 #include "Tracker.h"
-#include "TLD.h"
 #include "Rect.h"
 #include <cv.h>
+
+namespace tld {
+class TLD;
+}
 
 namespace obt {
 

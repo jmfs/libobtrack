@@ -91,12 +91,12 @@ KinectTracker::KinectTracker(xn::Context& context, bool wantSkeleton):
 		In this last case, the tracker can still be used, albeit without that capability. */
 int KinectTracker::init() {
 	XnStatus status = context.FindExistingNode(XN_NODE_TYPE_DEPTH, depthNode);
-	if(status != XN_STATUS_OK)
-		return -static_cast<int>(status);
+	if(status != XN_STATUS_OK) 
+		goto initFailure;
 
 	status = context.FindExistingNode(XN_NODE_TYPE_USER, userNode);
 	if(status != XN_STATUS_OK)
-		return -static_cast<int>(status);
+		goto initFailure;
 
 	if(getSkeleton == true && (!userNode.IsCapabilitySupported(XN_CAPABILITY_SKELETON) ||
 			!userNode.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION))) {
@@ -134,6 +134,10 @@ int KinectTracker::init() {
 	}
 
 	return status;
+
+initFailure:
+	wasInit = false;
+	return -static_cast<int>(status);
 }
 
 KinectTracker::~KinectTracker() {
@@ -145,6 +149,8 @@ KinectTracker::~KinectTracker() {
 }
 
 int KinectTracker::start(const TrainingInfo* ti, int idx) {
+	if(!wasInit)
+		return INIT_NEEDED;
 	started = true;
 	return userNode.GetNumberOfUsers();
 }
@@ -200,6 +206,8 @@ void KinectTracker::updateSkeleton() {
 	\sa Tracker::feed
 */
 int KinectTracker::feed(const cv::Mat& img) {
+	if(!wasInit)
+		return INIT_NEEDED;
 	XnUInt16 numUsers = userNode.GetNumberOfUsers();	
 	if(numUsers == 0) {
 		users.clear();

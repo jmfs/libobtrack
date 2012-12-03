@@ -58,6 +58,9 @@ int TLDTracker::start(const TrainingInfo* ti, int idx) {
 }
 
 int TLDTracker::feed(const cv::Mat& img) {
+	if(!started)
+		return NO_HINT;
+
 	cv::Mat gray;
 	cv::cvtColor(img, gray, CV_RGB2GRAY);
 	for(size_t i = 0; i < tlds.size(); i++) {

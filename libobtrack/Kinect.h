@@ -45,13 +45,6 @@ private:
 
 	void updateSkeleton();
 
-	/* Whether this tracker manages the OpenNI context's lifecycle.
-		Defaults to true, but the option exists since the class' user may want
-		to manage the context by himself, for instance, to access the data
-		from the visible light camera.
-	*/
-	//bool manageContext; 
-
 	/*! Reference to the OpenNI context.
 		It is a reference, since this tracker can't possibly know whether the caller wishes
 		to get data from the visible light camera, and because the caller
@@ -65,6 +58,8 @@ private:
 	std::vector<Blob> users;		//! The users vector
 
 	XnCallbackHandle userCBs, calibrationCBs, poseCBs;
+
+	bool wasInit;
 
 	/*! A user's skeleton, if it is detected. The Kinect can only reliably 
 		detect and track one skeleton (at least using OpenNI, as of 2011-09-05),
