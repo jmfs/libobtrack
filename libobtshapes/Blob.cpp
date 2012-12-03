@@ -33,22 +33,16 @@ cv::Point2f Blob::centroid() const {
 	float centroidX = xSum / static_cast<float>(size);
 	float centroidY = ySum / static_cast<float>(size);
 
-	if(!cachedCentroid)
-		cachedCentroid = new cv::Point2f(centroidX, centroidY);
-	else {
-		cachedCentroid->x = centroidX;
-		cachedCentroid->y = centroidY;
-	}
-
-	return cv::Point(static_cast<int>(cachedCentroid->x + 0.5f), 
-		static_cast<int>(cachedCentroid->y + 0.5f));
+	cachedCentroid = new cv::Point2f(centroidX, centroidY);
+	return *cachedCentroid;
 }
 
 cv::Rect Blob::boundingRect() const {
 	return cv::Rect(minX, minY, maxX - minX, maxY - minY);
 }
 
-
+// This runs _really_ slowly, for some reason. Most of the time
+// is spent at cv::AutoBuffer::AutoBuffer .
 cv::RotatedRect Blob::boundingRotatedRect() const {
 	if(cachedRR.size.width == -1 && !pixels.empty()) {
 		cachedRR = cv::minAreaRect(cv::Mat(pixels));
@@ -85,7 +79,8 @@ void Blob::clear() {
 		delete cachedCentroid;
 		cachedCentroid = NULL;
 	}
-	minX = std::numeric_limits<int>::min();
+	minX = minY = std::numeric_limits<int>::min();
+	maxX = maxY = std::numeric_limits<int>::max();
 	cachedRR.size.width = -1;
 }
 
@@ -98,7 +93,7 @@ const std::vector<cv::Point>& Blob::getPixelsRef() const {
 	return pixels;
 }
 
-std::list<cv::Point>::size_type Blob::size() {
+std::list<cv::Point>::size_type Blob::size() const {
 	return pixels.size();
 }
 

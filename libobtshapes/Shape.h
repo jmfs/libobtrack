@@ -13,9 +13,6 @@ public:
 	virtual cv::RotatedRect boundingRotatedRect() const = 0;
 
 	virtual void getPixels(std::vector<cv::Point>& result) const = 0;
-	
-	// TODO: Think what kind of operations are really needed here
-	// Intersection? Union? Add pixels?
 };
 
 }

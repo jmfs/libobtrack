@@ -8,7 +8,8 @@ namespace obt {
 
 template<typename T> class Rect_;
 
-/*! A rotated rectangle class. Like cv::RotatedRect, but with Shape's operations.
+/*! A rotated rectangle class. Like cv::RotatedRect, but with Shape's operations,
+	and a few helper functions.
 	See http://opencv.willowgarage.com/documentation/cpp/basic_structures.html#rotatedrect
 	for more details.
 */
@@ -17,7 +18,7 @@ public:
     RotatedRect();
 	RotatedRect(const cv::Point2f& center, const cv::Size2f& size, float angle);
     RotatedRect(const CvBox2D& box);
-	RotatedRect(const cv::RotatedRect cvRotRect);
+	RotatedRect(const cv::RotatedRect& cvRotRect);
 
 	//! Convert a Rect_ into a RotatedRect
 	template<typename T> RotatedRect(const Rect_<T>& rect);

@@ -1,78 +1,34 @@
 #include "Kinect.h"    
 #include "Blob.h"
+#include <iostream>
+
 
 namespace obt {
 
-void XN_CALLBACK_TYPE KinectTracker::FoundUser(
-			xn::UserGenerator& generator, XnUserID user, void* cookie) {
-	KinectTracker* instance = static_cast<KinectTracker*>(cookie);	
 
-	printf("Look for pose\n");
-	instance->userNode.GetPoseDetectionCap().StartPoseDetection("Psi", user);
-	return;
-}
-
-void XN_CALLBACK_TYPE KinectTracker::LostUser(
-			xn::UserGenerator& generator, XnUserID user, void* cookie) {
-	printf("Lost user %d\n", user);
-}
-
-void XN_CALLBACK_TYPE KinectTracker::PoseDetected(
-			xn::PoseDetectionCapability& pose, 
-			const XnChar* strPose, XnUserID user, void* cookie) {
-	KinectTracker* instance = static_cast<KinectTracker*>(cookie);
-	instance->userNode.GetSkeletonCap().RequestCalibration(user, TRUE);
-	instance->userNode.GetPoseDetectionCap().StopPoseDetection(user);
-}
-
-void XN_CALLBACK_TYPE KinectTracker::CalibrationStarted(
-			xn::SkeletonCapability& skeleton, XnUserID user, void* cookie) {
-	// TODO
-}
-
-void XN_CALLBACK_TYPE KinectTracker::CalibrationEnded(
-			xn::SkeletonCapability& skeleton, 
-			XnUserID user, XnBool bSuccess, void* cookie) {
-	KinectTracker* instance = static_cast<KinectTracker*>(cookie);
-	printf("Calibration done [%d] %ssuccessfully\n", user, bSuccess?"":"un");
-	if (bSuccess) {
-		instance->userNode.GetSkeletonCap().SaveCalibrationData(user, 0);
-		instance->userNode.GetSkeletonCap().StartTracking(user);
-	}
-	else
-		instance->userNode.GetPoseDetectionCap().StartPoseDetection("Psi", user);
-}
-
-KinectTracker::KinectTracker() {
+int KinectTracker::init() {
 	XnStatus status;
 	xn::EnumerationErrors errors;
-	status = context.InitFromXmlFile("kinect.xml", &errors);
-	if(status != XN_STATUS_OK) {
-		//TODO
-	}
+	//TODO: Add the possibility for another XML file
+	status = context.InitFromXmlFile("../kinect.xml", &errors);	
 
+	if(status != XN_STATUS_OK)
+		return status;	
 	status = context.FindExistingNode(XN_NODE_TYPE_DEPTH, depthNode);
-	if(status != XN_STATUS_OK) {
-		//TODO
-	}
+	if(status != XN_STATUS_OK)
+		return status;
+
 	status = context.FindExistingNode(XN_NODE_TYPE_USER, userNode);
-	if(status != XN_STATUS_OK) {
-		//TODO
-	}
+	if(status != XN_STATUS_OK)
+		return status;
+
 	if (!userNode.IsCapabilitySupported(XN_CAPABILITY_SKELETON) ||
-		!userNode.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION))
-	{
-		//TODO
+			!userNode.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION)) {
+		return -1; //TODO: Ability to work without these
 	}
 
 	// try to detect all joints
 	userNode.GetSkeletonCap().SetSkeletonProfile(XN_SKEL_PROFILE_ALL); 
-	xn::NodeInfo info = depthNode.GetInfo();
-
-	status = context.StartGeneratingAll();
-	if(status != XN_STATUS_OK) {
-		//TODO
-	}
 
 	/*	OpenNI API clarifications-that-should-have-been-in-the-docs:
 	
@@ -92,24 +48,92 @@ KinectTracker::KinectTracker() {
 		seems to imply it is row-major.
 	*/
 	
-	XnCallbackHandle hUserCBs, hCalibrationCBs, hPoseCBs;
-	userNode.RegisterUserCallbacks(FoundUser, LostUser, this, hUserCBs);
-	userNode.GetSkeletonCap().RegisterCalibrationCallbacks(CalibrationStarted, CalibrationEnded, this, hCalibrationCBs);
-	userNode.GetPoseDetectionCap().RegisterToPoseCallbacks(PoseDetected, NULL, this, hPoseCBs);
+	userNode.RegisterUserCallbacks(
+		KinectTracker::FoundUser, KinectTracker::LostUser, this, userCBs);
+	userNode.GetSkeletonCap().RegisterCalibrationCallbacks(
+		KinectTracker::CalibrationStarted, KinectTracker::CalibrationEnded, this, calibrationCBs);
+	userNode.GetPoseDetectionCap().RegisterToPoseCallbacks(
+		KinectTracker::PoseDetected, NULL, this, poseCBs);
 
-	status = context.StartGeneratingAll();
-	if(status != XN_STATUS_OK) {
-		//TODO
+	return status;
+}
+
+void XN_CALLBACK_TYPE KinectTracker::FoundUser(
+			xn::UserGenerator& generator, XnUserID user, void* cookie) {
+	KinectTracker* instance = static_cast<KinectTracker*>(cookie);	
+
+	printf("Found user %d\n", user);
+	instance->userNode.GetPoseDetectionCap().StartPoseDetection("Psi", user);
+	return;
+}
+
+void XN_CALLBACK_TYPE KinectTracker::LostUser(
+			xn::UserGenerator& generator, XnUserID user, void* cookie) {
+	KinectTracker* instance = static_cast<KinectTracker*>(cookie);
+	if(user == instance->skelUser)
+		instance->skelUser = 0;
+	instance->userNode.GetSkeletonCap().StopTracking(user);
+	std::clog << "Lost user " << user << std::endl;
+}
+
+void XN_CALLBACK_TYPE KinectTracker::PoseDetected(
+			xn::PoseDetectionCapability& pose, 
+			const XnChar* strPose, XnUserID user, void* cookie) { 
+	KinectTracker* instance = static_cast<KinectTracker*>(cookie);
+	instance->userNode.GetSkeletonCap().RequestCalibration(user, TRUE);
+	instance->userNode.GetPoseDetectionCap().StopPoseDetection(user);
+}
+
+void XN_CALLBACK_TYPE KinectTracker::CalibrationStarted(
+			xn::SkeletonCapability& skeleton, XnUserID user, void* cookie) {
+	std::clog << "Calibrating for skeleton..." << std::endl;
+}
+
+void XN_CALLBACK_TYPE KinectTracker::CalibrationEnded(
+			xn::SkeletonCapability& skeleton, 
+			XnUserID user, XnBool bSuccess, void* cookie) {
+	KinectTracker* instance = static_cast<KinectTracker*>(cookie);
+	std::clog << "Calibration done [" << user << "] " << (bSuccess?"":"un") << "successfully" << std::endl;
+	if (bSuccess) {
+		instance->userNode.GetSkeletonCap().SaveCalibrationData(user, 0);
+		instance->userNode.GetSkeletonCap().StartTracking(user);
+		instance->skelUser = user;
 	}
+	else
+		instance->userNode.GetPoseDetectionCap().StartPoseDetection("Psi", user);
 }
 
-int KinectTracker::start(const cv::Mat& img) {
-	return feed(img);
+
+KinectTracker::KinectTracker(xn::Context& context):
+		Tracker(false, false),
+		context(context),
+		userCBs(NULL),
+		poseCBs(NULL),
+		calibrationCBs(NULL),
+		skelUser(0), // OpenNI users start from 1, so using 0 is safe.
+		users(4) // Paraphrasing infamous words, this should be enough for everyone.
+				// There isn't a problem if it's exceeded anyway.
+{
 }
 
+KinectTracker::~KinectTracker() {
+	userNode.GetSkeletonCap().UnregisterCalibrationCallbacks(calibrationCBs);
+	userNode.GetPoseDetectionCap().UnregisterFromPoseCallbacks(poseCBs);
+	userNode.UnregisterUserCallbacks(userCBs);
+}
+
+int KinectTracker::start(const TrainingInfo* ti, int idx) {
+	started = true;
+	return userNode.GetNumberOfUsers();
+}
+
+/*! This version of feed is peculiar, in that it ignores the
+	provided image. \ref(Tracker::feed)
+
+	\param img This parameter is ignored.
+	\sa Tracker::feed
+*/
 int KinectTracker::feed(const cv::Mat& img) {
-	context.WaitAnyUpdateAll(); // TODO: It's probably best to leave this to code
-								// outside this library
 	int numUsers = userNode.GetNumberOfUsers();	
 	if(numUsers == 0) {
 		users.clear();
@@ -141,9 +165,10 @@ int KinectTracker::feed(const cv::Mat& img) {
 	for(int x = 0; x < maxX; x++) {
 		for(int y = 0; y < maxY; y++) {
 			int userInThisPixel = labels[y * maxX + x];
-			if(userInThisPixel != 0) {
-				/*// - 1, since users start at 1 and the array starts at 0
-				wasUserFound[userInThisPixel - 1] = true;*/
+			if(userInThisPixel != 0) {				
+				//wasUserFound[userInThisPixel - 1] = true;
+
+				// - 1, since users start at 1 and the array starts at 0
 				users[userInThisPixel - 1].addPoint(x, y);
 			}			
 		}

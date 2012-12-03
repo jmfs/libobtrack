@@ -22,7 +22,7 @@ public:
 
 	void getPixels(std::vector<cv::Point>& result) const;
 	const std::vector<cv::Point>& getPixelsRef() const;
-	std::vector<cv::Point>::size_type size();
+	std::vector<cv::Point>::size_type size() const;
 
 	void addPoint(int x, int y); 
 	void clear();

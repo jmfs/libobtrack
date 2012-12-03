@@ -1,8 +1,8 @@
 #ifndef _OBTRACK_TRACKER_H
 #define _OBTRACK_TRACKER_H
 
-#include "Object.h"
 #include "TrainingInfo.h"
+#include  "Skeleton.h"
 #include <list>
 #include <vector>
 #include <limits>
@@ -18,9 +18,13 @@ class Tracker {
 public:
 	enum Errors {
 		NO_HINT = -1, //! Returned for a tracker which needs a hint, but doesn't receive one
-		INVALID_DATA = -2 //! Returned in case the data passed is invalid
+		INVALID_DATA = -2, //! Returned in case the data passed is invalid
+		/*! Returned if further initialization is needed
+		 *	Having a need for it should be avoided whenever possible, in individual trackers.
+		 */
+		INIT_NEEDED = -3 
 	};
-	explicit Tracker(bool needsTraining, bool needsHint, bool singleObject);
+	explicit Tracker(bool needsTraining, bool needsHint);
 
 	/*! Performs an initial object detection, with or without hints,
 	 *  or updates one or more object's current shape and/or appearance models.
@@ -63,11 +67,12 @@ public:
 	virtual void objectShapes(std::vector<const Shape*>& shapes) const = 0;
 
 protected:
+	std::map<Skeleton::Joint, JointInfo>& skeletonJointMap(Skeleton& skel);
+
 	bool trained; //! If true, this tracker has already been trained and it is ready to start tracking objects
 	bool started; //! If true, initial object detection has been done
 
-private:
-	bool singleObject; //! Whether this is a single object tracker.
+private:	
 	bool _needsTraining; //! Specifies if this tracker needs to be trained by the train() function
 	/*! Whether this tracker needs an initial hint to the object's position and/or category.
 	*/

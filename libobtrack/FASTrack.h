@@ -40,10 +40,7 @@ public:
 	
 	virtual void stopTrackingSingleObject(int idx);
 	virtual void stopTracking();*/
-
-	std::vector<cv::DMatch> latestMatch;
-	std::vector<cv::KeyPoint>* keyPoints;
-	std::vector<cv::KeyPoint>* prevKeyPoints;
+	
 private:
 	static void matches2points(const vector<cv::KeyPoint>& train, const vector<cv::KeyPoint>& query,
                     const std::vector<cv::DMatch>& matches, std::vector<cv::Point2f>& pts_train,
@@ -81,6 +78,9 @@ private:
 	cv::Mat HPrev;
 
 	std::vector<Rect> keyPointShapes;
+	std::vector<cv::DMatch> latestMatch;
+	std::vector<cv::KeyPoint>* keyPoints;
+	std::vector<cv::KeyPoint>* prevKeyPoints;
 };
 
 }

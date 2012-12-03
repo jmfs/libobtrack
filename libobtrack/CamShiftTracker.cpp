@@ -34,91 +34,72 @@ CamShiftTracker::CamShiftTracker(int bins, int sMin, int vMin, int vMax):
 		_vMax(std::max(vMin, vMax)) {
 }
 
-/*! Trains the CamShiftTracker with an image, and the region where the object is present.
-	
-	\param ti A vector of (RGB image, object) pairs. In this tracker, only the first element 
-	is considered.
-	
-	\return Whether the training was successful.
+/*! \sa Tracker::start
 */
-bool CamShiftTracker::trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx) {
-	std::vector<TrainingInfo>::size_type size = ti.size();
-	if(size == 0 || ti[0].shapes.empty()) {
-		std::clog << "ERROR: CamShiftTracker::trainForSingleObject: Training vector is empty "
-				"or has no objects." << std::endl;
-		return false;
-	}
-
-	return trainForSingleObject(ti[0], idx);
-}
-
-
-
-
-int CamShiftTracker::start(const TrainingInfo* ti = NULL, int idx = -1) {
+int CamShiftTracker::start(const TrainingInfo* ti, int idx) {
 	assert(shapes.size() == masks.size() && masks.size() == hists.size());
 
-	if(ti.shapes.empty()) {
-		std::clog << "ERROR: CamShiftTracker::trainForSingleObject: TrainingInfo has "
+	if(ti == NULL || ti->img.rows <= 0 || ti->img.cols <= 0 || ti->shapes.empty()) {
+		std::clog << "ERROR: CamShiftTracker::start: TrainingInfo has "
 			"no objects." << std::endl;
-		return false;
+		return NO_HINT;
 	}
 
 	if(idx > static_cast<int>(shapes.size())) {
-		std::clog << "WARNING: CamShiftTracker::trainForSingleObject: idx is greater than the"
-			"number of currently tracked objects. Adding a new object instead. Did you really want to do this?"
-			<< std::endl;
+		std::clog << "WARNING: CamShiftTracker::start: idx is greater than the number of currently tracked objects." 
+			"Adding a new object instead. Did you really want to do this?"	<< std::endl;
 		idx = shapes.size();
 	}
 
 	if(idx < 0)
 		idx = shapes.size();
 
-	cv::Mat& newMask = updateListElement(masks, idx, 
-		static_cast<cv::Mat>(cv::Mat::zeros(ti.img.rows, ti.img.cols, CV_8UC1)));
+	for(int i = 0; i < ti->shapes.size(); i++) {
+		// CamShift prep
+		cv::Mat& newMask = updateListElement(masks, idx + i, 
+			static_cast<cv::Mat>(cv::Mat::zeros(ti->img.rows, ti->img.cols, CV_8UC1)));	
 		
+		cv::Mat hsv;
+		cv::cvtColor(ti->img, hsv, CV_RGB2HSV);		
+
+		// Threshold both saturation and value. See constructor docs for details.
+
+		// In 8-bit images, OpenCV has hues from 0 to 180.
+		// Upper bounds are exclusive.
+		cv::inRange(hsv, cv::Scalar(0, _sMin, _vMin, 0), cv::Scalar(181, 256, _vMax, 0), newMask);
 	
-	// CamShift prep
+		// Calculate the hue histogram for the object's region
+		cv::MatND& newHist = updateListElement(hists, idx + i, cv::MatND());
+				
+		Rect searchWindow = ti->shapes[0]->boundingRect();
+		sanitizeWindow(searchWindow, ti->img.cols, ti->img.rows);
+		cv::Mat maskROI = newMask(searchWindow);
+		cv::Mat roi = hsv(searchWindow);
 
-	// Extract the object's region and convert to HSV
-	Rect searchWindow = ti.shapes[0]->boundingRect();
-	sanitizeWindow(searchWindow, ti.img.cols, ti.img.rows);
-	cv::Mat maskROI = newMask(searchWindow);
-	cv::Mat hsv;
-	cv::cvtColor(ti.img, hsv, CV_RGB2HSV);
-	cv::Mat roi = hsv(searchWindow);
+		const int channel[] = {0};
+		float range[] = {0, 181};
+		const float* ranges[] = {range};
+		cv::calcHist(&roi, 1, channel, maskROI, newHist, 1, &_bins, ranges);
 
-	// Threshold both saturation and value. See constructor docs for details.
+		// normalize it
+		double histMax;
+		cv::minMaxLoc(newHist, NULL, &histMax);
+		newHist *= histMax > 0 ? 255.0 / histMax : 0.0;
 
-	// In 8-bit images, OpenCV has hues from 0 to 180.
-	// Upper bounds are exclusive.
-	cv::inRange(hsv, cv::Scalar(0, _sMin, _vMin, 0), cv::Scalar(181, 256, _vMax, 0), newMask);
+		updateListElement(shapes, idx + i, RotatedRect(searchWindow));
+	}
 
-	
-	cv::MatND& newHist = updateListElement(hists, idx, cv::MatND());
+	started = true;
 
-	const int channel[] = {0};
-	float range[] = {0, 181};
-	const float* ranges[] = {range};
-	cv::calcHist(&roi, 1, channel, maskROI, newHist, 1, &_bins, ranges);
-
-	double histMax;
-	cv::minMaxLoc(newHist, NULL, &histMax);
-	newHist *= histMax > 0 ? 255.0 / histMax : 0.0;
-
-	updateListElement(shapes, idx, RotatedRect(searchWindow));
-
-	trained = true;
-
-	return ;
+	return ti->shapes.size();
 }
 
 int CamShiftTracker::feed(const cv::Mat& img) {
 	assert(shapes.size() == masks.size() && masks.size() == hists.size());
 
-	if(!trained) {
-		std::clog << "ERROR: CamShiftTracker::feed: tracker has not been trained." << std::endl;
-		return 0;
+	if(!started) {
+		std::clog << "ERROR: CamShiftTracker::feed: need to call start() first." << std::endl;
+		return NO_HINT;
 	}
 
 	cv::Mat hsv;
@@ -247,6 +228,5 @@ void CamShiftTracker::sanitizeWindow(Rect& rect, int width, int height) {
 	if(rect.y + rect.height > height)
 		rect.height = height - rect.y;
 }
-	
 
 }

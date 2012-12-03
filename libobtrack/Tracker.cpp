@@ -2,12 +2,11 @@
 
 namespace obt {
 
-Tracker::Tracker(bool needsTraining, bool needsHint, bool singleObject):
+Tracker::Tracker(bool needsTraining, bool needsHint):
 		_needsTraining(needsTraining),
 		_needsHint(needsHint),
 		trained(false),
-		started(false),
-		singleObject(singleObject) {
+		started(false) {
 }
 
 /*! Trains an object tracker, according to sample images, or
@@ -102,10 +101,6 @@ void Tracker::stopTrackingSingleObject(int idx) {
 void Tracker::stopTracking() {
 	trained = false;
 	started = false;
-}
-
-bool Tracker::isSingleObjectTracker() const {
-	return singleObject;
 }
 
 bool Tracker::needsTraining() const {

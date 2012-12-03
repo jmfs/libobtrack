@@ -15,7 +15,7 @@ RotatedRect::RotatedRect(const CvBox2D& box):
 		cv::RotatedRect(center, size, angle) {
 }
 
-RotatedRect::RotatedRect(const cv::RotatedRect cvRotRect):
+RotatedRect::RotatedRect(const cv::RotatedRect& cvRotRect):
 	cv::RotatedRect(cvRotRect) {
 }
 
@@ -33,8 +33,6 @@ void RotatedRect::points(cv::Point2f pts[]) const {
 
 cv::Point2f RotatedRect::centroid() const {
 	return center; 
-	// this is OK, since OpenCV rounds, rather than truncates float to integer point conversions.
-	// The only possible problem... is the sub-pixel precision actually needed?
 }
 
 cv::Rect RotatedRect::boundingRect() const {
