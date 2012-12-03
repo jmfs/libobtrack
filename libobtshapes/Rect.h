@@ -1,5 +1,5 @@
-#ifndef OBTRACK_RECT_H
-#define OBTRACK_RECT_H
+#ifndef _OBTSHAPES_RECT_H
+#define _OBTSHAPES_RECT_H
 
 #include <cv.h>
 #include <cmath>

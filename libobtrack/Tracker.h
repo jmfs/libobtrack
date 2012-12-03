@@ -9,30 +9,33 @@
 
 namespace obt {
 
+/*! The base class for all shape- (not point-) based trackers.
+	Can handle both single-object and multi-object trackers.
+	To keep the interface consistent, single-object trackers will
+	be run once for each object, if trained for more than a single object.
+*/
 class Tracker : public TrackerBase {
 public:
-	explicit Tracker(bool needsTraining = false);
+	explicit Tracker(bool needsTraining = false, bool singleObject = false);
 
-	/*  ! Redoes the training for the object in index n.
-
-		\return Whether the training has been successful. 
-			If the method hasn't been overriden, always returns true.
-	*/
-	//virtual bool retrain(int n, const std::vector<TrainingInfo>& ti);
-
-	/*! Trains an object tracker, according to sample images, or
-		known image/objects pairs. If a tracker needs training, it should
-		always overload this function.
-
-		\return Whether the training has been successful. 
-			If the method hasn't been overriden, always returns true.
-	*/
-	virtual bool train(const std::vector<TrainingInfo>& ti);
+	
+	virtual bool train(const std::vector<TrainingInfo>& ti);	
+	virtual bool train(const TrainingInfo& ti);	
+	
+	virtual bool trainForSingleObject(const std::vector<TrainingInfo>& ti, int idx = -1);	
+	virtual bool trainForSingleObject(const TrainingInfo& ti, int idx = -1);
+	
+	virtual void stopTrackingSingleObject(int idx);
+	virtual void stopTracking();
 
 	/*! Appends the shapes found to a vector.
 		\param shapes Output. The found shapes will be appended to this vector.
 	*/
 	virtual void objectShapes(std::vector<const Shape*>& shapes) const = 0;
+
+	virtual bool isSingleObjectTracker();
+private:
+	bool singleObject; //! Whether this is a single object tracker.
 };
 
 }

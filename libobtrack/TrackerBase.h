@@ -26,7 +26,7 @@ public:
 	 */
 	virtual int feed(const cv::Mat& img) = 0;
 
-	/*  ! Forces a tracker to stop tracking the nth object in this tracker.
+	/*! Forces a tracker to stop tracking the nth object in this tracker.
 	 * \param n The object's index in this tracker.
 	 */
 	//virtual void untrackObject(int n) = 0;

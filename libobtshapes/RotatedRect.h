@@ -1,5 +1,5 @@
-#ifndef _OBTRACK_ROTATED_RECT_H
-#define _OBTRACK_ROTATED_RECT_H
+#ifndef _OBTSHAPES_ROTATED_RECT_H
+#define _OBTSHAPES_ROTATED_RECT_H
 
 #include <cv.h>
 #include "Shape.h"

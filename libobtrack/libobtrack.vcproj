@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="..\libobtshapes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -108,7 +108,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="..\libobtshapes"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -171,7 +171,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="..\libobtshapes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -244,7 +244,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="..\libobtshapes"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -305,10 +305,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RotatedRect.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Tracker.cpp"
 				>
 			</File>
@@ -323,10 +319,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Blob.h"
-				>
-			</File>
-			<File
 				RelativePath=".\CamShiftTracker.h"
 				>
 			</File>
@@ -340,18 +332,6 @@
 			</File>
 			<File
 				RelativePath=".\PointTracker.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Rect.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RotatedRect.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Shape.h"
 				>
 			</File>
 			<File

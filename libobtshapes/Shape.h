@@ -1,6 +1,7 @@
-#ifndef OBTRACK_SHAPE_H
-#define OBTRACK_SHAPE_H
+#ifndef _OBTSHAPES_SHAPE_H
+#define _OBTSHAPES_SHAPE_H
 
+#include <vector>
 #include <cv.h>
 
 namespace obt {

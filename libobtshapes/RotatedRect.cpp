@@ -47,7 +47,7 @@ cv::RotatedRect RotatedRect::boundingRotatedRect() const {
 
 void RotatedRect::getPixels(std::vector<cv::Point>& result) const {
 	//TODO: complete
-	std::cerr << "obt::RotatedRect::getPixels: Not implemented" << std::endl;
+	std::cerr << "obt::RotatedRect::getPixels: Not implemented, yet" << std::endl;
 	assert(false);
 	/*cv::Rect bb = boundingRect();
 	
