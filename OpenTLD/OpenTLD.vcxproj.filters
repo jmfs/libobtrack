@@ -148,13 +148,13 @@
   </ItemGroup>
   <ItemGroup>
     <Filter Include="cvblobs">
-      <UniqueIdentifier>{CF5FBDEB-B417-4820-BD37-4D75406D131D}</UniqueIdentifier>
+      <UniqueIdentifier>{D5B780C8-51AE-4218-BA7A-F9C580439816}</UniqueIdentifier>
     </Filter>
     <Filter Include="mftracker">
-      <UniqueIdentifier>{B4F84DEF-43D0-475B-A1F4-9A474C3A4B5B}</UniqueIdentifier>
+      <UniqueIdentifier>{46A8E5E1-D01A-411C-B33E-4DBE103F1A5E}</UniqueIdentifier>
     </Filter>
     <Filter Include="tld">
-      <UniqueIdentifier>{FF2CD51C-3956-4774-8284-316E6658CC96}</UniqueIdentifier>
+      <UniqueIdentifier>{457D92F4-3E8B-4742-B6A6-5C6C7E4269E6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
