@@ -20,49 +20,49 @@
       <Filter>cvblobs</Filter>
     </ClCompile>
     <ClCompile Include="src\mftracker\bb.cpp">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClCompile>
     <ClCompile Include="src\mftracker\bb_predict.cpp">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClCompile>
     <ClCompile Include="src\mftracker\fbtrack.cpp">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClCompile>
     <ClCompile Include="src\mftracker\lk.cpp">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClCompile>
     <ClCompile Include="src\mftracker\median.cpp">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\Clustering.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\DetectionResult.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\DetectorCascade.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\EnsembleClassifier.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\ForegroundDetector.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\MedianFlowTracker.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\NNClassifier.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\TLD.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\TLDUtil.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
     <ClCompile Include="src\tld\VarianceFilter.cpp">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,55 +88,55 @@
       <Filter>cvblobs</Filter>
     </ClInclude>
     <ClInclude Include="src\mftracker\bb.h">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClInclude>
     <ClInclude Include="src\mftracker\bb_predict.h">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClInclude>
     <ClInclude Include="src\mftracker\fbtrack.h">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClInclude>
     <ClInclude Include="src\mftracker\lk.h">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClInclude>
     <ClInclude Include="src\mftracker\median.h">
-      <Filter>mftracker/Source</Filter>
+      <Filter>mftracker</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\Clustering.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\DetectionResult.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\DetectorCascade.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\EnsembleClassifier.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\ForegroundDetector.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\IntegralImage.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\MedianFlowTracker.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\NNClassifier.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\NormalizedPatch.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\TLD.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\TLDUtil.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
     <ClInclude Include="src\tld\VarianceFilter.h">
-      <Filter>tld/Source</Filter>
+      <Filter>tld</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -150,11 +150,11 @@
     <Filter Include="cvblobs">
       <UniqueIdentifier>{CF5FBDEB-B417-4820-BD37-4D75406D131D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mftracker/Source">
-      <UniqueIdentifier>{4F5E5C29-B554-4DF4-A738-047D0CA8026A}</UniqueIdentifier>
+    <Filter Include="mftracker">
+      <UniqueIdentifier>{B4F84DEF-43D0-475B-A1F4-9A474C3A4B5B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="tld/Source">
-      <UniqueIdentifier>{9281156A-B44C-4460-8235-CBCAFB359A59}</UniqueIdentifier>
+    <Filter Include="tld">
+      <UniqueIdentifier>{FF2CD51C-3956-4774-8284-316E6658CC96}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
