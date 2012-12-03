@@ -221,7 +221,8 @@ void CamShiftTracker::setVMax(int vMax) {
 /*! See \ref Tracker::objectShapes. 
 	Additional info: The returned shapes are \ref RotatedRect "RotatedRects". 
 */
-void CamShiftTracker::objectShapes(std::vector<const Shape*>& out) const {	
+void CamShiftTracker::objectShapes(std::vector<const Shape*>& out) const {
+	out.reserve(out.size() + shapes.size());
 	for(std::list<RotatedRect>::const_iterator i = shapes.begin(); i != shapes.end(); i++)
 		out.push_back(static_cast<const Shape*>(&(*i)));
 }

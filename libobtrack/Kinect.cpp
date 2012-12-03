@@ -56,6 +56,12 @@ void XN_CALLBACK_TYPE KinectTracker::CalibrationEnded(
 }
 
 
+/*! Constructs a new KinectTracker, which will use a reference to
+	the provided context to get the	data it will need.
+
+	\param context A reference to an OpenNI context. 
+		Must be initialized prior to the call to init.
+*/
 KinectTracker::KinectTracker(xn::Context& context):
 		Tracker(false, false),
 		context(context),
@@ -74,14 +80,7 @@ KinectTracker::KinectTracker(xn::Context& context):
 /*! Initializes OpenNI.
 	\return*/
 int KinectTracker::init() {
-	XnStatus status;
-	xn::EnumerationErrors errors;
-	//TODO: Add the possibility for another XML file
-	status = context.InitFromXmlFile("../kinect.xml", &errors);	
-
-	if(status != XN_STATUS_OK)
-		return -static_cast<int>(status);	
-	status = context.FindExistingNode(XN_NODE_TYPE_DEPTH, depthNode);
+	XnStatus status = context.FindExistingNode(XN_NODE_TYPE_DEPTH, depthNode);
 	if(status != XN_STATUS_OK)
 		return -static_cast<int>(status);
 
@@ -224,6 +223,7 @@ int KinectTracker::feed(const cv::Mat& img) {
 }
 
 void KinectTracker::objectShapes(std::vector<const Shape*>& shapes) const {
+	shapes.reserve(shapes.size() + users.size());
 	for(size_t i = 0; i < users.size(); i++) {
 		if(skelUser > 0 && i == skelUser - 1)
 			shapes.push_back(&userSkelAlternative);
@@ -233,6 +233,7 @@ void KinectTracker::objectShapes(std::vector<const Shape*>& shapes) const {
 }
 
 void KinectTracker::objectShapes2D(std::vector<const Shape*>& shapes, int forImage) const {
+	shapes.reserve(shapes.size() + users.size());
 	for(size_t i = 0; i < users.size(); i++) {
 		if(skelUser > 0 && i == skelUser - 1)
 			shapes.push_back(&user2DSkelAlternative);

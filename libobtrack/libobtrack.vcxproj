@@ -326,7 +326,6 @@
     <ClCompile Include="CvPixelBackgroundGMM.cpp" />
     <ClCompile Include="FASTrack.cpp" />
     <ClCompile Include="Kinect.cpp" />
-    <ClCompile Include="matlab.cpp" />
     <ClCompile Include="Tracker.cpp" />
   </ItemGroup>
   <ItemGroup>

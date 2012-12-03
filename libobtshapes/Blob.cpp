@@ -76,7 +76,6 @@ void Blob::clear() {
 	\param result Output. This Blob's pixels will be added to it.
 */
 void Blob::getPixels(std::vector<cv::Point>& result) const {
-	result.reserve(result.size() + pixels.size());
 	result.insert(result.end(), pixels.begin(), pixels.end());
 }
 
