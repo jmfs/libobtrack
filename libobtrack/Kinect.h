@@ -1,12 +1,13 @@
 #ifndef _OBTRACK_KINECT_H
 #define _OBTRACK_KINECT_H
 
+#include <XnCppWrapper.h>
+
 #include "Tracker.h"
 #include "Blob.h"
 #include "Skeleton.h"
 #include "ShapeAlternatives.h"
 
-#include <XnCppWrapper.h>
 #include <map>
 
 namespace obt {
