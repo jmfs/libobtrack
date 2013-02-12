@@ -91,6 +91,8 @@ private:
 	/*! Whether this tracker needs an initial hint to the object's position.
 	*/
 	bool _needsHint; 
+
+	bool defaultTrainImpl();
 };
 
 /*! Updates a list element. If idx == l.size(), adds a value to the end of the list,

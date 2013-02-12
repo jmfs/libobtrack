@@ -15,12 +15,15 @@ Tracker::Tracker(bool needsTraining, bool needsHint):
 
 	\return A negative value on failure. Any other value if successful.
 */
+/* Dev note: for the future, try to replace this with a factory method when needed
+   (i.e. static MyTracker createTracker(...)).
+*/
 int Tracker::init() {
 	return 0;
 }
 
 /*! Trains an object tracker, according to sample images, or
-	known image/objects pairs. If a tracker needs training, it should
+	known (image, shapes) pairs. If a tracker needs training, it should
 	always overload this function.
 
 	\param ti A vector of images, or (image, object) pairs.
@@ -29,8 +32,7 @@ int Tracker::init() {
 		If the method hasn't been overriden, always returns true.
 */
 bool Tracker::train(const std::vector<TrainingInfo>& ti) {
-	trained = true;
-	return true;
+	return defaultTrainImpl();
 }
 
 /*! Trains an object tracker, according to a single sample image, or
@@ -41,10 +43,16 @@ bool Tracker::train(const std::vector<TrainingInfo>& ti) {
 
 	\return Whether the training has been successful. 
 		If the method hasn't been overriden, always returns true.
-
-	\sa Tracker::trainForSingleObject()
 */
 bool Tracker::train(const TrainingInfo& ti) {
+	return defaultTrainImpl();
+}
+
+bool Tracker::defaultTrainImpl() {
+	if(_needsTraining)  {
+		std::cerr << "Tracker::train: This tracker needs training."
+				"You really should override this" << std::endl;
+	}
 	trained = true;
 	return true;
 }
@@ -65,18 +73,18 @@ bool Tracker::train(const TrainingInfo& ti) {
 	\sa needsHint()
 */
 void Tracker::stopTrackingSingleObject(size_t idx) {
-	if(!needsTraining() && !needsHint())
-		std::cerr << "Tracker::stopTrackingSingleObject: Can't stop tracking single object in\n "
-				"\t\tautomatic trackers (i.e. when needsHint() == false)" << std::endl;
+	if(!_needsTraining && !_needsHint)
+		std::cerr << "Tracker::stopTrackingSingleObject: Can't stop tracking single object in\n"
+				"\t\tautomatic trackers (i.e. when needsHint() == false)." << std::endl;
 	else
-		std::cerr << "Tracker::stopTrackingSingleObject: "
-				"You really should be overriding this" << std::endl;
+		std::cerr << "Tracker::stopTrackingSingleObject: Manual object trackers\n"
+				"\t\t(i.e. when needsHint() == false && needsTraining() == false) "
+				"really should override this" << std::endl;
 }
 
 /*! Stops all tracking. Forgets any prior training.
 */
 void Tracker::stopTracking() {
-
 	trained = false;
 	started = false;
 }
